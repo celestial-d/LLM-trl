@@ -77,14 +77,14 @@ def format_prompt(example):
 
 
 # Load tokenizer and model
-model_name = "facebook/opt-125m"
+model_name = "facebook/opt-1.3b"
 logger.info(f"Loading model and tokenizer: {model_name}")
 tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)
 model = AutoModelForCausalLM.from_pretrained(model_name)
 
 # Load dataset
 logger.info("Loading dataset...")
-raw_dataset = load_dataset("sahil2801/CodeAlpaca-20k", split="train")
+raw_dataset = load_dataset("vicgalle/alpaca-gpt4", split="train")
 raw_dataset = raw_dataset.map(lambda x: {"text": format_prompt(x)})
 logger.info("Loaded dataset successfully")
 tokenized_dataset = raw_dataset
