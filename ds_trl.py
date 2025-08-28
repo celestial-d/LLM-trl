@@ -21,8 +21,9 @@ def format_row(ex):
     return f"### Question:\n{instr}\n\n### Answer:\n{out}"
 
 def main():
-    # ===== OPT-6.7B + DeepSpeed ZeRO-3 (CPU offload params+optimizer) =====
-    model_name = "facebook/opt-6.7b"
+    # ===== DeepSpeed ZeRO-3 (CPU offload params+optimizer) =====
+    #facebook/opt-6.7b
+    model_name = "meta-llama/Llama-2-7b-hf"
     dataset_name = "sahil2801/CodeAlpaca-20k"
     output_dir = "./opt67b_codealpaca_zero3"
 
@@ -49,7 +50,8 @@ def main():
     Path(output_dir).mkdir(parents=True, exist_ok=True)
 
     # ===== Dataset =====
-    raw = load_dataset(dataset_name, split="train").shuffle(seed=seed)
+    #raw = load_dataset(dataset_name, split="train").shuffle(seed=seed)
+    raw = load_dataset(dataset_name, split="train[:5]").shuffle(seed=seed)
     train = raw.map(lambda ex: {"text": format_row(ex)}, remove_columns=raw.column_names)
     eval_ds = train
 
@@ -74,6 +76,30 @@ def main():
     optim_name = "adamw_torch"
 
     # ===== TrainingArguments — DeepSpeed ONLY (no FSDP) =====
+    # targs = TrainingArguments(
+    #     output_dir=output_dir,
+    #     num_train_epochs=num_train_epochs,
+    #     per_device_train_batch_size=per_device_train_batch_size,
+    #     gradient_accumulation_steps=gradient_accumulation_steps,
+    #     learning_rate=learning_rate,
+    #     weight_decay=weight_decay,
+    #     warmup_ratio=warmup_ratio,
+    #     lr_scheduler_type=lr_scheduler_type,
+    #     logging_steps=logging_steps,
+    #     save_steps=save_steps,
+    #     save_total_limit=save_total_limit,
+    #     eval_strategy="steps",
+    #     eval_steps=eval_steps,
+    #     eval_accumulation_steps=1,
+    #     bf16=bf16,
+    #     fp16=fp16,
+    #     optim=optim_name,
+    #     report_to=["none"],
+    #     seed=seed,
+    #     ddp_find_unused_parameters=False,
+
+    #     deepspeed="ds_zero3_offload.json",
+    # )
     targs = TrainingArguments(
         output_dir=output_dir,
         num_train_epochs=num_train_epochs,
@@ -84,8 +110,6 @@ def main():
         warmup_ratio=warmup_ratio,
         lr_scheduler_type=lr_scheduler_type,
         logging_steps=logging_steps,
-        save_steps=save_steps,
-        save_total_limit=save_total_limit,
         eval_strategy="steps",
         eval_steps=eval_steps,
         eval_accumulation_steps=1,
@@ -97,6 +121,8 @@ def main():
         ddp_find_unused_parameters=False,
 
         deepspeed="ds_zero3_offload.json",
+        save_strategy="no",             # <- disables all periodic & final saves
+        save_total_limit=0,             # <- optional (no effect when save_strategy="no")
     )
 
     trainer = SFTTrainer(
