@@ -97,13 +97,13 @@ def sanity_check_labels(tokenizer, data_collator, fmt_fn, dataset, seq_len=512, 
 # -----------------------
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", type=str, default="facebook/opt-125m")
+    parser.add_argument("--model_name", type=str, default="facebook/opt-6.7b")
     parser.add_argument("--dataset_name", type=str, default="vicgalle/alpaca-gpt4")
     parser.add_argument("--output_dir", type=str, default="")
     parser.add_argument("--dtype", type=str, choices=["fp16", "bf16", "fp32"], default="fp16")
     parser.add_argument("--gradient_checkpointing", action="store_true", default=True)
     parser.add_argument("--attn_impl", type=str, default="sdpa")
-    parser.add_argument("--per_device_train_batch_size", type=int, default=4)
+    parser.add_argument("--per_device_train_batch_size", type=int, default=1)
     parser.add_argument("--gradient_accumulation_steps", type=int, default=4)
     parser.add_argument("--learning_rate", type=float, default=2e-5)
     parser.add_argument("--max_steps", type=int, default=20)
