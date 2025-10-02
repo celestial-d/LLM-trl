@@ -23,8 +23,8 @@ def format_row(ex):
 def main():
     # ===== DeepSpeed ZeRO-3 (CPU offload params+optimizer) =====
     #facebook/opt-6.7b
-    model_name = "meta-llama/Llama-2-7b-hf"
-    dataset_name = "sahil2801/CodeAlpaca-20k"
+    model_name = "/home/zhangduo4610/opt-125m"
+    dataset_name = "/home/zhangduo4610/CodeAlpaca-20k"
     output_dir = "./opt67b_codealpaca_zero3"
 
     max_seq_length = 512
