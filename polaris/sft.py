@@ -4,7 +4,8 @@ import socket
 import torch
 import shutil
 import torch.distributed as dist
-from datasets import load_dataset
+#from datasets import load_dataset
+from dataset.py import load_data, get_tokenizer_and_data_collator_and_propt_formatting
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainerCallback
 from trl import SFTConfig, SFTTrainer
 from torch.profiler import profile, schedule, tensorboard_trace_handler, ProfilerActivity
@@ -135,23 +136,29 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
 
     # ---------- Dataset ----------
-    data_dir = "/lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b/wikitext"
-    raw_ds = load_dataset(
-        "parquet",
-        data_files={
-            "train": [
-                f"{data_dir}/wikitext-103-v1/train-00000-of-00002.parquet",
-            ]
-        },
-        split="train",
+    # data_dir = "/lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b/wikitext"
+    # raw_ds = load_dataset(
+    #     "parquet",
+    #     data_files={
+    #         "train": [
+    #             f"{data_dir}/wikitext-103-v1/train-00000-of-00002.parquet",
+    #         ]
+    #     },
+    #     split="train",
+    # )
+    tokenizer, data_collator, formatting_prompts_func = (
+        get_tokenizer_and_data_collator_and_propt_formatting(model_path)
     )
-
+    
+    tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
+    #trainset = load_data(partition_id, num_partitions, dataset_name)
+    trainset = load_data(0, 2, "/home/zhangduo4610/CodeAlpaca-20k")
     # ---------- Trainer ----------
     trainer = SFTTrainer(
         model=model,
         processing_class=tokenizer,
         args=training_args,
-        train_dataset=raw_ds,
+        train_dataset=trainset,
     )
 
     # # ---------- Profiler setup (CURRENT DIR) ----------
