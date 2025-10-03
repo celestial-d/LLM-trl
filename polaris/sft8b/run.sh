@@ -16,7 +16,7 @@ export CXXFLAGS="${CXXFLAGS:-} -fpermissive"
 
 # # --- Paths / env ---
 ENV_NAME_PATH="/lus/eagle/projects/SR-APPFL/duo/env/sft"
-APP_DIR="/lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris"
+APP_DIR="/lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/sft8b"
 SCRIPT_PATH="${APP_DIR}/sft.py"
 DS_CFG="${APP_DIR}/deepspeed_zero3.yaml"
 

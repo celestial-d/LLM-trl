@@ -10,6 +10,29 @@ from transformers import AutoTokenizer, AutoModelForCausalLM, TrainerCallback
 from trl import SFTConfig, SFTTrainer
 from torch.profiler import profile, schedule, tensorboard_trace_handler, ProfilerActivity
 
+def get_local_rank():
+    # Common envs from torchrun/DeepSpeed/SLURM/OpenMPI/PMI
+    for k in ("LOCAL_RANK", "OMPI_COMM_WORLD_LOCAL_RANK", "SLURM_LOCALID", "PMI_LOCAL_RANK", "MPI_LOCALRANKID"):
+        v = os.environ.get(k)
+        if v is not None:
+            return int(v)
+    # Derive from global rank if needed
+    try:
+        r = int(os.environ.get("RANK", "0"))
+        nppn = int(os.environ.get("NPROC_PER_NODE", os.environ.get("LOCAL_SIZE", "1")))
+        return r % max(nppn, 1)
+    except Exception:
+        pass
+    # Fall back to CUDA device index
+    try:
+        import torch
+        if torch.cuda.is_available():
+            return torch.cuda.current_device()
+    except Exception:
+        pass
+    return 0
+
+
 # ---------- GCC Utils ----------
 def _which_many(cands):
     for c in cands:
@@ -144,9 +167,9 @@ def main():
         packing=True,
         per_device_train_batch_size=16,   #16 for 8B, 2 for 70B
         gradient_accumulation_steps=16,    #16 for 8B, 8 for 70B
-        dataset_num_proc=32,          #64 for 8B, 32 for 70B
-        num_train_epochs=1,
-    )
+        dataset_num_proc=32,          #64 for 8B, 32 for 70B      
+        save_strategy="no",
+    ) #num_train_epochs=1,
 
     # ---------- Model & tokenizer ----------
     # model_path = os.path.expanduser("../../models/Qwen3-8B")
@@ -163,6 +186,14 @@ def main():
         low_cpu_mem_usage=True,
         attn_implementation="flash_attention_2",
     )
+    
+    # ---- Count size in GB ----
+    # param_size_bytes = sum(p.numel() * p.element_size() for p in model.parameters())
+    # buffer_size_bytes = sum(b.numel() * b.element_size() for b in model.buffers())
+    # total_size_bytes = param_size_bytes + buffer_size_bytes
+
+    # print(f"Model size: {total_size_bytes/1024**3:.2f} GB")
+    
     model.config.use_cache = False
     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
 
@@ -208,7 +239,7 @@ def main():
     #     trainer.add_callback(ProfCallback(prof=prof))
     #     trainer.train()
     results = trainer.train()
-    if get_global_rank() == 0:
+    if get_local_rank() == 0:
         print(f"[rank0] Train done. train_loss={results.training_loss}.")
 
 
