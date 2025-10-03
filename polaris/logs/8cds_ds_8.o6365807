@@ -1,0 +1,920 @@
++ export 'CXXFLAGS= -fpermissive'
++ CXXFLAGS=' -fpermissive'
++ ENV_NAME_PATH=/lus/eagle/projects/SR-APPFL/duo/env/sft
++ APP_DIR=/lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris
++ SCRIPT_PATH=/lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/sft.py
++ DS_CFG=/lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/deepspeed_zero3.yaml
++ export TRITON_DISABLE_TMA=1
++ TRITON_DISABLE_TMA=1
++ export 'CXXFLAGS= -fpermissive -fpermissive'
++ CXXFLAGS=' -fpermissive -fpermissive'
++ export DS_BUILD_SPARSE_ATTN=0
++ DS_BUILD_SPARSE_ATTN=0
++ export DS_SKIP_CUDA_BUILD=1
++ DS_SKIP_CUDA_BUILD=1
++ export GPUS_PER_NODE=4
++ GPUS_PER_NODE=4
+++ wc -l
++ export NNODES=2
++ NNODES=2
++ export WORLD_SIZE=8
++ WORLD_SIZE=8
+++ head -n1 /var/spool/pbs/aux/6365807.polaris-pbs-01.hsn.cm.polaris.alcf.anl.gov
++ HEADNODE=x3005c0s19b0n0.hsn.cm.polaris.alcf.anl.gov
++ HEADIP=x3005c0s19b0n0.hsn.cm.polaris.alcf.anl.gov
++ export RDZV_PORT=12355
++ RDZV_PORT=12355
++ export OMP_NUM_THREADS=8
++ OMP_NUM_THREADS=8
++ export TMPDIR=/tmp/zhangduo4610_6365807
++ TMPDIR=/tmp/zhangduo4610_6365807
++ mkdir -p /tmp/zhangduo4610_6365807
++ export TRITON_CACHE_DIR_BASE=/tmp/zhangduo4610_6365807/triton
++ TRITON_CACHE_DIR_BASE=/tmp/zhangduo4610_6365807/triton
++ export TORCH_EXTENSIONS_DIR_BASE=/tmp/zhangduo4610_6365807/torch_ext
++ TORCH_EXTENSIONS_DIR_BASE=/tmp/zhangduo4610_6365807/torch_ext
++ mkdir -p /tmp/zhangduo4610_6365807/triton /tmp/zhangduo4610_6365807/torch_ext
++ PY=/lus/eagle/projects/SR-APPFL/duo/env/sft/bin/python
++ export PYTHONNOUSERSITE=1
++ PYTHONNOUSERSITE=1
++ LAUNCHER='
+  export RANK=${PMI_RANK:-0} ;
+  export LOCAL_RANK=${PMI_LOCAL_RANK:-$((RANK % 4))} ;
+  export TRITON_CACHE_DIR=/tmp/zhangduo4610_6365807/triton/$RANK ;
+  export TORCH_EXTENSIONS_DIR=/tmp/zhangduo4610_6365807/torch_ext/$RANK ;
+  mkdir -p "$TRITON_CACHE_DIR" "$TORCH_EXTENSIONS_DIR" ;
+
+# --- Polaris modules ---
+  module use /soft/modulefiles
+  module load gcc-native/12.3
+  module load conda/2024-04-29-aws-nccl
+  module load cudatoolkit-standalone/12.4.0
+  unset http_proxy https_proxy HTTP_PROXY
+  conda activate /lus/eagle/projects/SR-APPFL/duo/env/sft
+
+  HF_HUB_ENABLE_HF_TRANSFER=1 \
+  ACCELERATE_LOG_LEVEL=info \
+  TRANSFORMERS_VERBOSITY=info \
+  python -m accelerate.commands.launch \
+    --config_file /lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/deepspeed_zero3.yaml \
+    --num_machines 2 \
+    --num_processes 8 \
+    --main_process_ip x3005c0s19b0n0.hsn.cm.polaris.alcf.anl.gov \
+    --main_process_port 12355 \
+    --machine_rank ${PMI_RANK:-0} \
+    --tee 3 \
+    /lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/sft.py
+'
++ mpiexec -n 2 -ppn 1 bash -lc '
+  export RANK=${PMI_RANK:-0} ;
+  export LOCAL_RANK=${PMI_LOCAL_RANK:-$((RANK % 4))} ;
+  export TRITON_CACHE_DIR=/tmp/zhangduo4610_6365807/triton/$RANK ;
+  export TORCH_EXTENSIONS_DIR=/tmp/zhangduo4610_6365807/torch_ext/$RANK ;
+  mkdir -p "$TRITON_CACHE_DIR" "$TORCH_EXTENSIONS_DIR" ;
+
+# --- Polaris modules ---
+  module use /soft/modulefiles
+  module load gcc-native/12.3
+  module load conda/2024-04-29-aws-nccl
+  module load cudatoolkit-standalone/12.4.0
+  unset http_proxy https_proxy HTTP_PROXY
+  conda activate /lus/eagle/projects/SR-APPFL/duo/env/sft
+
+  HF_HUB_ENABLE_HF_TRANSFER=1 \
+  ACCELERATE_LOG_LEVEL=info \
+  TRANSFORMERS_VERBOSITY=info \
+  python -m accelerate.commands.launch \
+    --config_file /lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/deepspeed_zero3.yaml \
+    --num_machines 2 \
+    --num_processes 8 \
+    --main_process_ip x3005c0s19b0n0.hsn.cm.polaris.alcf.anl.gov \
+    --main_process_port 12355 \
+    --machine_rank ${PMI_RANK:-0} \
+    --tee 3 \
+    /lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/sft.py
+'
+
+The following have been reloaded with a version change:
+  1) conda/2024-04-29 => conda/2024-04-29-aws-nccl
+
+
+The following have been reloaded with a version change:
+  1) conda/2024-04-29 => conda/2024-04-29-aws-nccl
+
+[2025-10-02 23:05:56,901] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-10-02 23:05:56,902] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-10-02 23:07:10,879] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[2025-10-02 23:07:10,879] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default0]:PyTorch: setting up devices
+[default2]:PyTorch: setting up devices
+[default1]:PyTorch: setting up devices
+[default3]:PyTorch: setting up devices
+[default1]:PyTorch: setting up devices
+[default0]:PyTorch: setting up devices
+[default2]:PyTorch: setting up devices
+[default3]:PyTorch: setting up devices
+[default1]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default1]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default0]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default0]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default2]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default2]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default3]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default3]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default0]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default0]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default2]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default2]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default1]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default1]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default3]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default3]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default1]:Model config LlamaConfig {
+[default1]:  "architectures": [
+[default1]:    "LlamaForCausalLM"
+[default1]:  ],
+[default1]:  "attention_bias": false,
+[default1]:  "attention_dropout": 0.0,
+[default1]:  "bos_token_id": 128000,
+[default1]:  "eos_token_id": 128009,
+[default1]:  "head_dim": 128,
+[default1]:  "hidden_act": "silu",
+[default1]:  "hidden_size": 4096,
+[default1]:  "initializer_range": 0.02,
+[default1]:  "intermediate_size": 14336,
+[default1]:  "max_position_embeddings": 8192,
+[default1]:  "mlp_bias": false,
+[default1]:  "model_type": "llama",
+[default1]:  "num_attention_heads": 32,
+[default1]:  "num_hidden_layers": 32,
+[default1]:  "num_key_value_heads": 8,
+[default1]:  "pretraining_tp": 1,
+[default1]:  "rms_norm_eps": 1e-05,
+[default1]:  "rope_scaling": null,
+[default1]:  "rope_theta": 500000.0,
+[default1]:  "tie_word_embeddings": false,
+[default1]:  "torch_dtype": "bfloat16",
+[default1]:  "transformers_version": "4.55.0",
+[default1]:  "use_cache": true,
+[default1]:  "vocab_size": 128256
+[default1]:}
+[default1]:
+[default1]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default0]:Model config LlamaConfig {
+[default0]:  "architectures": [
+[default0]:    "LlamaForCausalLM"
+[default0]:  ],
+[default0]:  "attention_bias": false,
+[default0]:  "attention_dropout": 0.0,
+[default0]:  "bos_token_id": 128000,
+[default0]:  "eos_token_id": 128009,
+[default0]:  "head_dim": 128,
+[default0]:  "hidden_act": "silu",
+[default0]:  "hidden_size": 4096,
+[default0]:  "initializer_range": 0.02,
+[default0]:  "intermediate_size": 14336,
+[default0]:  "max_position_embeddings": 8192,
+[default0]:  "mlp_bias": false,
+[default0]:  "model_type": "llama",
+[default0]:  "num_attention_heads": 32,
+[default0]:  "num_hidden_layers": 32,
+[default0]:  "num_key_value_heads": 8,
+[default0]:  "pretraining_tp": 1,
+[default0]:  "rms_norm_eps": 1e-05,
+[default0]:  "rope_scaling": null,
+[default0]:  "rope_theta": 500000.0,
+[default0]:  "tie_word_embeddings": false,
+[default0]:  "torch_dtype": "bfloat16",
+[default0]:  "transformers_version": "4.55.0",
+[default0]:  "use_cache": true,
+[default0]:  "vocab_size": 128256
+[default0]:}
+[default0]:
+[default0]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default2]:Model config LlamaConfig {
+[default2]:  "architectures": [
+[default2]:    "LlamaForCausalLM"
+[default2]:  ],
+[default2]:  "attention_bias": false,
+[default2]:  "attention_dropout": 0.0,
+[default2]:  "bos_token_id": 128000,
+[default2]:  "eos_token_id": 128009,
+[default2]:  "head_dim": 128,
+[default2]:  "hidden_act": "silu",
+[default2]:  "hidden_size": 4096,
+[default2]:  "initializer_range": 0.02,
+[default2]:  "intermediate_size": 14336,
+[default2]:  "max_position_embeddings": 8192,
+[default2]:  "mlp_bias": false,
+[default2]:  "model_type": "llama",
+[default2]:  "num_attention_heads": 32,
+[default2]:  "num_hidden_layers": 32,
+[default2]:  "num_key_value_heads": 8,
+[default2]:  "pretraining_tp": 1,
+[default2]:  "rms_norm_eps": 1e-05,
+[default2]:  "rope_scaling": null,
+[default2]:  "rope_theta": 500000.0,
+[default2]:  "tie_word_embeddings": false,
+[default2]:  "torch_dtype": "bfloat16",
+[default2]:  "transformers_version": "4.55.0",
+[default2]:  "use_cache": true,
+[default2]:  "vocab_size": 128256
+[default2]:}
+[default2]:
+[default2]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default3]:Model config LlamaConfig {
+[default3]:  "architectures": [
+[default3]:    "LlamaForCausalLM"
+[default3]:  ],
+[default3]:  "attention_bias": false,
+[default3]:  "attention_dropout": 0.0,
+[default3]:  "bos_token_id": 128000,
+[default3]:  "eos_token_id": 128009,
+[default3]:  "head_dim": 128,
+[default3]:  "hidden_act": "silu",
+[default3]:  "hidden_size": 4096,
+[default3]:  "initializer_range": 0.02,
+[default3]:  "intermediate_size": 14336,
+[default3]:  "max_position_embeddings": 8192,
+[default3]:  "mlp_bias": false,
+[default3]:  "model_type": "llama",
+[default3]:  "num_attention_heads": 32,
+[default3]:  "num_hidden_layers": 32,
+[default3]:  "num_key_value_heads": 8,
+[default3]:  "pretraining_tp": 1,
+[default3]:  "rms_norm_eps": 1e-05,
+[default3]:  "rope_scaling": null,
+[default3]:  "rope_theta": 500000.0,
+[default3]:  "tie_word_embeddings": false,
+[default3]:  "torch_dtype": "bfloat16",
+[default3]:  "transformers_version": "4.55.0",
+[default3]:  "use_cache": true,
+[default3]:  "vocab_size": 128256
+[default3]:}
+[default3]:
+[default3]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default0]:Model config LlamaConfig {
+[default0]:  "architectures": [
+[default0]:    "LlamaForCausalLM"
+[default0]:  ],
+[default0]:  "attention_bias": false,
+[default0]:  "attention_dropout": 0.0,
+[default0]:  "bos_token_id": 128000,
+[default0]:  "eos_token_id": 128009,
+[default0]:  "head_dim": 128,
+[default0]:  "hidden_act": "silu",
+[default0]:  "hidden_size": 4096,
+[default0]:  "initializer_range": 0.02,
+[default0]:  "intermediate_size": 14336,
+[default0]:  "max_position_embeddings": 8192,
+[default0]:  "mlp_bias": false,
+[default0]:  "model_type": "llama",
+[default0]:  "num_attention_heads": 32,
+[default0]:  "num_hidden_layers": 32,
+[default0]:  "num_key_value_heads": 8,
+[default0]:  "pretraining_tp": 1,
+[default0]:  "rms_norm_eps": 1e-05,
+[default0]:  "rope_scaling": null,
+[default0]:  "rope_theta": 500000.0,
+[default0]:  "tie_word_embeddings": false,
+[default0]:  "torch_dtype": "bfloat16",
+[default0]:  "transformers_version": "4.55.0",
+[default0]:  "use_cache": true,
+[default0]:  "vocab_size": 128256
+[default0]:}
+[default0]:
+[default0]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default2]:Model config LlamaConfig {
+[default2]:  "architectures": [
+[default2]:    "LlamaForCausalLM"
+[default2]:  ],
+[default2]:  "attention_bias": false,
+[default2]:  "attention_dropout": 0.0,
+[default2]:  "bos_token_id": 128000,
+[default2]:  "eos_token_id": 128009,
+[default2]:  "head_dim": 128,
+[default2]:  "hidden_act": "silu",
+[default2]:  "hidden_size": 4096,
+[default2]:  "initializer_range": 0.02,
+[default2]:  "intermediate_size": 14336,
+[default2]:  "max_position_embeddings": 8192,
+[default2]:  "mlp_bias": false,
+[default2]:  "model_type": "llama",
+[default2]:  "num_attention_heads": 32,
+[default2]:  "num_hidden_layers": 32,
+[default2]:  "num_key_value_heads": 8,
+[default2]:  "pretraining_tp": 1,
+[default2]:  "rms_norm_eps": 1e-05,
+[default2]:  "rope_scaling": null,
+[default2]:  "rope_theta": 500000.0,
+[default2]:  "tie_word_embeddings": false,
+[default2]:  "torch_dtype": "bfloat16",
+[default2]:  "transformers_version": "4.55.0",
+[default2]:  "use_cache": true,
+[default2]:  "vocab_size": 128256
+[default2]:}
+[default2]:
+[default2]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default1]:Model config LlamaConfig {
+[default1]:  "architectures": [
+[default1]:    "LlamaForCausalLM"
+[default1]:  ],
+[default1]:  "attention_bias": false,
+[default1]:  "attention_dropout": 0.0,
+[default1]:  "bos_token_id": 128000,
+[default1]:  "eos_token_id": 128009,
+[default1]:  "head_dim": 128,
+[default1]:  "hidden_act": "silu",
+[default1]:  "hidden_size": 4096,
+[default1]:  "initializer_range": 0.02,
+[default1]:  "intermediate_size": 14336,
+[default1]:  "max_position_embeddings": 8192,
+[default1]:  "mlp_bias": false,
+[default1]:  "model_type": "llama",
+[default1]:  "num_attention_heads": 32,
+[default1]:  "num_hidden_layers": 32,
+[default1]:  "num_key_value_heads": 8,
+[default1]:  "pretraining_tp": 1,
+[default1]:  "rms_norm_eps": 1e-05,
+[default1]:  "rope_scaling": null,
+[default1]:  "rope_theta": 500000.0,
+[default1]:  "tie_word_embeddings": false,
+[default1]:  "torch_dtype": "bfloat16",
+[default1]:  "transformers_version": "4.55.0",
+[default1]:  "use_cache": true,
+[default1]:  "vocab_size": 128256
+[default1]:}
+[default1]:
+[default1]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default3]:Model config LlamaConfig {
+[default3]:  "architectures": [
+[default3]:    "LlamaForCausalLM"
+[default3]:  ],
+[default3]:  "attention_bias": false,
+[default3]:  "attention_dropout": 0.0,
+[default3]:  "bos_token_id": 128000,
+[default3]:  "eos_token_id": 128009,
+[default3]:  "head_dim": 128,
+[default3]:  "hidden_act": "silu",
+[default3]:  "hidden_size": 4096,
+[default3]:  "initializer_range": 0.02,
+[default3]:  "intermediate_size": 14336,
+[default3]:  "max_position_embeddings": 8192,
+[default3]:  "mlp_bias": false,
+[default3]:  "model_type": "llama",
+[default3]:  "num_attention_heads": 32,
+[default3]:  "num_hidden_layers": 32,
+[default3]:  "num_key_value_heads": 8,
+[default3]:  "pretraining_tp": 1,
+[default3]:  "rms_norm_eps": 1e-05,
+[default3]:  "rope_scaling": null,
+[default3]:  "rope_theta": 500000.0,
+[default3]:  "tie_word_embeddings": false,
+[default3]:  "torch_dtype": "bfloat16",
+[default3]:  "transformers_version": "4.55.0",
+[default3]:  "use_cache": true,
+[default3]:  "vocab_size": 128256
+[default3]:}
+[default3]:
+[default3]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default1]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default1]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default1]:Generate config GenerationConfig {
+[default1]:  "bos_token_id": 128000,
+[default1]:  "eos_token_id": 128009
+[default1]:}
+[default1]:
+[default0]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default0]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default0]:Generate config GenerationConfig {
+[default0]:  "bos_token_id": 128000,
+[default0]:  "eos_token_id": 128009
+[default0]:}
+[default0]:
+[default2]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default2]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default2]:Generate config GenerationConfig {
+[default2]:  "bos_token_id": 128000,
+[default2]:  "eos_token_id": 128009
+[default2]:}
+[default2]:
+[default3]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default3]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default3]:Generate config GenerationConfig {
+[default3]:  "bos_token_id": 128000,
+[default3]:  "eos_token_id": 128009
+[default3]:}
+[default3]:
+[default0]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default0]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default0]:Generate config GenerationConfig {
+[default0]:  "bos_token_id": 128000,
+[default0]:  "eos_token_id": 128009
+[default0]:}
+[default0]:
+[default2]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default2]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default2]:Generate config GenerationConfig {
+[default2]:  "bos_token_id": 128000,
+[default2]:  "eos_token_id": 128009
+[default2]:}
+[default2]:
+[default1]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default1]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default1]:Generate config GenerationConfig {
+[default1]:  "bos_token_id": 128000,
+[default1]:  "eos_token_id": 128009
+[default1]:}
+[default1]:
+[default3]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default3]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default3]:Generate config GenerationConfig {
+[default3]:  "bos_token_id": 128000,
+[default3]:  "eos_token_id": 128009
+[default3]:}
+[default3]:
+[default3]:
+[default3]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default0]:
+[default0]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default2]:
+[default2]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default1]:
+[default2]:
+[default2]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default0]:
+[default0]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default3]:
+[default3]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default1]:
+[default1]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default2]:
+[default2]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.70s/it][default3]:
+[default1]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default0]:
+[default0]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.76s/it][default1]:
+[default1]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.76s/it][default3]:
+[default3]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.77s/it][default2]:
+[default3]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.70s/it][default1]:
+[default1]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.72s/it][default0]:
+[default2]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:05,  1.77s/it][default0]:
+[default0]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.72s/it][default1]:
+[default1]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.72s/it][default3]:
+[default3]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.71s/it][default2]:
+[default0]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:33<01:40, 33.36s/it][default2]:
+[default2]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.72s/it][default3]:
+[default3]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.73s/it][default1]:
+[default1]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.73s/it][default0]:
+[default2]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.71s/it][default0]:
+[default0]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.66s/it][default1]:
+[default1]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.65s/it][default3]:
+[default3]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.65s/it][default2]:
+[default0]:Loading checkpoint shards:  50%|█████     | 2/4 [01:08<01:09, 34.65s/it][default2]:
+[default2]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.66s/it][default3]:
+[default3]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.66s/it][default1]:
+[default2]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.65s/it][default0]:
+[default0]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.50s/it]
+[default0]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.53s/it]
+[default0]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default0]:
+[default0]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default0]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default1]:
+[default1]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.50s/it]
+[default1]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.52s/it]
+[default1]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default1]:
+[default1]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default1]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default3]:
+[default3]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.50s/it]
+[default3]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.52s/it]
+[default3]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default3]:
+[default3]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default3]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default2]:
+[default2]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.50s/it]
+[default2]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.52s/it]
+[default2]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default2]:
+[default2]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default2]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default1]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.66s/it][default2]:
+[default2]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.50s/it]
+[default2]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.52s/it]
+[default2]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default2]:
+[default2]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default2]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default2]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default2]:Generate config GenerationConfig {
+[default2]:  "bos_token_id": 128000,
+[default2]:  "do_sample": true,
+[default2]:  "eos_token_id": [
+[default2]:    128001,
+[default2]:    128009
+[default2]:  ],
+[default2]:  "max_length": 4096,
+[default2]:  "temperature": 0.6,
+[default2]:  "top_p": 0.9
+[default2]:}
+[default2]:
+[default3]:
+[default3]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.50s/it]
+[default3]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.53s/it]
+[default3]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default3]:
+[default3]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default3]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default3]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default3]:Generate config GenerationConfig {
+[default3]:  "bos_token_id": 128000,
+[default3]:  "do_sample": true,
+[default3]:  "eos_token_id": [
+[default3]:    128001,
+[default3]:    128009
+[default3]:  ],
+[default3]:  "max_length": 4096,
+[default3]:  "temperature": 0.6,
+[default3]:  "top_p": 0.9
+[default3]:}
+[default3]:
+[default1]:
+[default1]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.50s/it]
+[default1]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.52s/it]
+[default1]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default1]:
+[default1]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default1]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default1]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default1]:Generate config GenerationConfig {
+[default1]:  "bos_token_id": 128000,
+[default1]:  "do_sample": true,
+[default1]:  "eos_token_id": [
+[default1]:    128001,
+[default1]:    128009
+[default1]:  ],
+[default1]:  "max_length": 4096,
+[default1]:  "temperature": 0.6,
+[default1]:  "top_p": 0.9
+[default1]:}
+[default1]:
+[default0]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default0]:Generate config GenerationConfig {
+[default0]:  "bos_token_id": 128000,
+[default0]:  "do_sample": true,
+[default0]:  "eos_token_id": [
+[default0]:    128001,
+[default0]:    128009
+[default0]:  ],
+[default0]:  "max_length": 4096,
+[default0]:  "temperature": 0.6,
+[default0]:  "top_p": 0.9
+[default0]:}
+[default0]:
+[default0]:loading file tokenizer.json
+[default0]:loading file tokenizer.model
+[default0]:loading file added_tokens.json
+[default0]:loading file special_tokens_map.json
+[default0]:loading file tokenizer_config.json
+[default0]:loading file chat_template.jinja
+[default1]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default1]:Generate config GenerationConfig {
+[default1]:  "bos_token_id": 128000,
+[default1]:  "do_sample": true,
+[default1]:  "eos_token_id": [
+[default1]:    128001,
+[default1]:    128009
+[default1]:  ],
+[default1]:  "max_length": 4096,
+[default1]:  "temperature": 0.6,
+[default1]:  "top_p": 0.9
+[default1]:}
+[default1]:
+[default1]:loading file tokenizer.json
+[default1]:loading file tokenizer.model
+[default1]:loading file added_tokens.json
+[default1]:loading file special_tokens_map.json
+[default1]:loading file tokenizer_config.json
+[default1]:loading file chat_template.jinja
+[default3]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default3]:Generate config GenerationConfig {
+[default3]:  "bos_token_id": 128000,
+[default3]:  "do_sample": true,
+[default3]:  "eos_token_id": [
+[default3]:    128001,
+[default3]:    128009
+[default3]:  ],
+[default3]:  "max_length": 4096,
+[default3]:  "temperature": 0.6,
+[default3]:  "top_p": 0.9
+[default3]:}
+[default3]:
+[default3]:loading file tokenizer.json
+[default3]:loading file tokenizer.model
+[default3]:loading file added_tokens.json
+[default3]:loading file special_tokens_map.json
+[default3]:loading file tokenizer_config.json
+[default3]:loading file chat_template.jinja
+[default2]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default2]:Generate config GenerationConfig {
+[default2]:  "bos_token_id": 128000,
+[default2]:  "do_sample": true,
+[default2]:  "eos_token_id": [
+[default2]:    128001,
+[default2]:    128009
+[default2]:  ],
+[default2]:  "max_length": 4096,
+[default2]:  "temperature": 0.6,
+[default2]:  "top_p": 0.9
+[default2]:}
+[default2]:
+[default2]:loading file tokenizer.json
+[default2]:loading file tokenizer.model
+[default2]:loading file added_tokens.json
+[default2]:loading file special_tokens_map.json
+[default2]:loading file tokenizer_config.json
+[default2]:loading file chat_template.jinja
+[default2]:loading file tokenizer.json
+[default2]:loading file tokenizer.model
+[default2]:loading file added_tokens.json
+[default2]:loading file special_tokens_map.json
+[default2]:loading file tokenizer_config.json
+[default2]:loading file chat_template.jinja
+[default3]:loading file tokenizer.json
+[default3]:loading file tokenizer.model
+[default3]:loading file added_tokens.json
+[default3]:loading file special_tokens_map.json
+[default3]:loading file tokenizer_config.json
+[default3]:loading file chat_template.jinja
+[default1]:loading file tokenizer.json
+[default1]:loading file tokenizer.model
+[default1]:loading file added_tokens.json
+[default1]:loading file special_tokens_map.json
+[default1]:loading file tokenizer_config.json
+[default1]:loading file chat_template.jinja
+[default0]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default0]:/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/flwr_datasets/utils.py:109: UserWarning: The currently tested dataset are ['mnist', 'ylecun/mnist', 'cifar10', 'uoft-cs/cifar10', 'fashion_mnist', 'zalando-datasets/fashion_mnist', 'sasha/dog-food', 'zh-plus/tiny-imagenet', 'scikit-learn/adult-census-income', 'cifar100', 'uoft-cs/cifar100', 'svhn', 'ufldl-stanford/svhn', 'sentiment140', 'stanfordnlp/sentiment140', 'speech_commands', 'LIUM/tedlium', 'flwrlabs/femnist', 'flwrlabs/ucf101', 'flwrlabs/ambient-acoustic-context', 'jlh/uci-mushrooms', 'Mike0307/MNIST-M', 'flwrlabs/usps', 'scikit-learn/iris', 'flwrlabs/pacs', 'flwrlabs/cinic10', 'flwrlabs/caltech101', 'flwrlabs/office-home', 'flwrlabs/fed-isic2019']. Given: /home/zhangduo4610/CodeAlpaca-20k.
+[default0]:  warnings.warn(
+[default1]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default1]:/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/flwr_datasets/utils.py:109: UserWarning: The currently tested dataset are ['mnist', 'ylecun/mnist', 'cifar10', 'uoft-cs/cifar10', 'fashion_mnist', 'zalando-datasets/fashion_mnist', 'sasha/dog-food', 'zh-plus/tiny-imagenet', 'scikit-learn/adult-census-income', 'cifar100', 'uoft-cs/cifar100', 'svhn', 'ufldl-stanford/svhn', 'sentiment140', 'stanfordnlp/sentiment140', 'speech_commands', 'LIUM/tedlium', 'flwrlabs/femnist', 'flwrlabs/ucf101', 'flwrlabs/ambient-acoustic-context', 'jlh/uci-mushrooms', 'Mike0307/MNIST-M', 'flwrlabs/usps', 'scikit-learn/iris', 'flwrlabs/pacs', 'flwrlabs/cinic10', 'flwrlabs/caltech101', 'flwrlabs/office-home', 'flwrlabs/fed-isic2019']. Given: /home/zhangduo4610/CodeAlpaca-20k.
+[default1]:  warnings.warn(
+[default3]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default3]:/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/flwr_datasets/utils.py:109: UserWarning: The currently tested dataset are ['mnist', 'ylecun/mnist', 'cifar10', 'uoft-cs/cifar10', 'fashion_mnist', 'zalando-datasets/fashion_mnist', 'sasha/dog-food', 'zh-plus/tiny-imagenet', 'scikit-learn/adult-census-income', 'cifar100', 'uoft-cs/cifar100', 'svhn', 'ufldl-stanford/svhn', 'sentiment140', 'stanfordnlp/sentiment140', 'speech_commands', 'LIUM/tedlium', 'flwrlabs/femnist', 'flwrlabs/ucf101', 'flwrlabs/ambient-acoustic-context', 'jlh/uci-mushrooms', 'Mike0307/MNIST-M', 'flwrlabs/usps', 'scikit-learn/iris', 'flwrlabs/pacs', 'flwrlabs/cinic10', 'flwrlabs/caltech101', 'flwrlabs/office-home', 'flwrlabs/fed-isic2019']. Given: /home/zhangduo4610/CodeAlpaca-20k.
+[default3]:  warnings.warn(
+[default2]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default2]:/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/flwr_datasets/utils.py:109: UserWarning: The currently tested dataset are ['mnist', 'ylecun/mnist', 'cifar10', 'uoft-cs/cifar10', 'fashion_mnist', 'zalando-datasets/fashion_mnist', 'sasha/dog-food', 'zh-plus/tiny-imagenet', 'scikit-learn/adult-census-income', 'cifar100', 'uoft-cs/cifar100', 'svhn', 'ufldl-stanford/svhn', 'sentiment140', 'stanfordnlp/sentiment140', 'speech_commands', 'LIUM/tedlium', 'flwrlabs/femnist', 'flwrlabs/ucf101', 'flwrlabs/ambient-acoustic-context', 'jlh/uci-mushrooms', 'Mike0307/MNIST-M', 'flwrlabs/usps', 'scikit-learn/iris', 'flwrlabs/pacs', 'flwrlabs/cinic10', 'flwrlabs/caltech101', 'flwrlabs/office-home', 'flwrlabs/fed-isic2019']. Given: /home/zhangduo4610/CodeAlpaca-20k.
+[default2]:  warnings.warn(
+[default2]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default2]:/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/flwr_datasets/utils.py:109: UserWarning: The currently tested dataset are ['mnist', 'ylecun/mnist', 'cifar10', 'uoft-cs/cifar10', 'fashion_mnist', 'zalando-datasets/fashion_mnist', 'sasha/dog-food', 'zh-plus/tiny-imagenet', 'scikit-learn/adult-census-income', 'cifar100', 'uoft-cs/cifar100', 'svhn', 'ufldl-stanford/svhn', 'sentiment140', 'stanfordnlp/sentiment140', 'speech_commands', 'LIUM/tedlium', 'flwrlabs/femnist', 'flwrlabs/ucf101', 'flwrlabs/ambient-acoustic-context', 'jlh/uci-mushrooms', 'Mike0307/MNIST-M', 'flwrlabs/usps', 'scikit-learn/iris', 'flwrlabs/pacs', 'flwrlabs/cinic10', 'flwrlabs/caltech101', 'flwrlabs/office-home', 'flwrlabs/fed-isic2019']. Given: /home/zhangduo4610/CodeAlpaca-20k.
+[default2]:  warnings.warn(
+[default3]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default3]:/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/flwr_datasets/utils.py:109: UserWarning: The currently tested dataset are ['mnist', 'ylecun/mnist', 'cifar10', 'uoft-cs/cifar10', 'fashion_mnist', 'zalando-datasets/fashion_mnist', 'sasha/dog-food', 'zh-plus/tiny-imagenet', 'scikit-learn/adult-census-income', 'cifar100', 'uoft-cs/cifar100', 'svhn', 'ufldl-stanford/svhn', 'sentiment140', 'stanfordnlp/sentiment140', 'speech_commands', 'LIUM/tedlium', 'flwrlabs/femnist', 'flwrlabs/ucf101', 'flwrlabs/ambient-acoustic-context', 'jlh/uci-mushrooms', 'Mike0307/MNIST-M', 'flwrlabs/usps', 'scikit-learn/iris', 'flwrlabs/pacs', 'flwrlabs/cinic10', 'flwrlabs/caltech101', 'flwrlabs/office-home', 'flwrlabs/fed-isic2019']. Given: /home/zhangduo4610/CodeAlpaca-20k.
+[default3]:  warnings.warn(
+[default1]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default1]:/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/flwr_datasets/utils.py:109: UserWarning: The currently tested dataset are ['mnist', 'ylecun/mnist', 'cifar10', 'uoft-cs/cifar10', 'fashion_mnist', 'zalando-datasets/fashion_mnist', 'sasha/dog-food', 'zh-plus/tiny-imagenet', 'scikit-learn/adult-census-income', 'cifar100', 'uoft-cs/cifar100', 'svhn', 'ufldl-stanford/svhn', 'sentiment140', 'stanfordnlp/sentiment140', 'speech_commands', 'LIUM/tedlium', 'flwrlabs/femnist', 'flwrlabs/ucf101', 'flwrlabs/ambient-acoustic-context', 'jlh/uci-mushrooms', 'Mike0307/MNIST-M', 'flwrlabs/usps', 'scikit-learn/iris', 'flwrlabs/pacs', 'flwrlabs/cinic10', 'flwrlabs/caltech101', 'flwrlabs/office-home', 'flwrlabs/fed-isic2019']. Given: /home/zhangduo4610/CodeAlpaca-20k.
+[default1]:  warnings.warn(
+[default0]:
+[default0]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:45<00:35, 35.62s/it][default0]:
+[default0]:Loading checkpoint shards: 100%|██████████| 4/4 [01:52<00:00, 24.15s/it]
+[default0]:Loading checkpoint shards: 100%|██████████| 4/4 [01:52<00:00, 28.06s/it]
+[default0]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default0]:
+[default0]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default0]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default0]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default0]:Generate config GenerationConfig {
+[default0]:  "bos_token_id": 128000,
+[default0]:  "do_sample": true,
+[default0]:  "eos_token_id": [
+[default0]:    128001,
+[default0]:    128009
+[default0]:  ],
+[default0]:  "max_length": 4096,
+[default0]:  "temperature": 0.6,
+[default0]:  "top_p": 0.9
+[default0]:}
+[default0]:
+[default0]:loading file tokenizer.json
+[default0]:loading file tokenizer.model
+[default0]:loading file added_tokens.json
+[default0]:loading file special_tokens_map.json
+[default0]:loading file tokenizer_config.json
+[default0]:loading file chat_template.jinja
+[default0]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default0]:/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/flwr_datasets/utils.py:109: UserWarning: The currently tested dataset are ['mnist', 'ylecun/mnist', 'cifar10', 'uoft-cs/cifar10', 'fashion_mnist', 'zalando-datasets/fashion_mnist', 'sasha/dog-food', 'zh-plus/tiny-imagenet', 'scikit-learn/adult-census-income', 'cifar100', 'uoft-cs/cifar100', 'svhn', 'ufldl-stanford/svhn', 'sentiment140', 'stanfordnlp/sentiment140', 'speech_commands', 'LIUM/tedlium', 'flwrlabs/femnist', 'flwrlabs/ucf101', 'flwrlabs/ambient-acoustic-context', 'jlh/uci-mushrooms', 'Mike0307/MNIST-M', 'flwrlabs/usps', 'scikit-learn/iris', 'flwrlabs/pacs', 'flwrlabs/cinic10', 'flwrlabs/caltech101', 'flwrlabs/office-home', 'flwrlabs/fed-isic2019']. Given: /home/zhangduo4610/CodeAlpaca-20k.
+[default0]:  warnings.warn(
+[default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:00<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:04<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:05<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:06<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:08<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:09<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:10<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:11<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:13<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:14<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:15<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:16<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:17<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:19<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:20<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:21<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:22<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:23<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:24<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:26<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:27<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:28<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:29<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:31<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:32<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:33<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:34<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:35<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:37<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:38<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:39<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:40<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:41<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:42<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:44<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:45<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:46<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:47<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:48<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:50<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:51<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:52<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:53<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:54<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:56<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:57<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:58<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [00:59<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:01<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:02<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:03<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:04<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:05<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:07<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:08<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:09<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:10<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:11<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:13<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:14<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:15<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:16<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:17<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:17<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:18<?, ? examples/s][default0]:
+[default0]:Tokenizing train dataset (num_proc=64):   0%|          | 0/10011 [01:18<?, ? examples/s]
+[default0]:[rank0]: multiprocess.pool.RemoteTraceback: 
+[default0]:[rank0]: """
+[default0]:[rank0]: Traceback (most recent call last):
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/multiprocess/pool.py", line 125, in worker
+[default0]:[rank0]:     result = (True, func(*args, **kwds))
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/datasets/utils/py_utils.py", line 678, in _write_generator_to_queue
+[default0]:[rank0]:     for i, result in enumerate(func(**kwargs)):
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/datasets/arrow_dataset.py", line 3428, in _map_single
+[default0]:[rank0]:     example = apply_function_on_filtered_inputs(example, i, offset=offset)
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/datasets/arrow_dataset.py", line 3320, in apply_function_on_filtered_inputs
+[default0]:[rank0]:     processed_inputs = function(*fn_args, *additional_args, **fn_kwargs)
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/trl/trainer/sft_trainer.py", line 797, in tokenize
+[default0]:[rank0]:     output = {"input_ids": processing_class(text=example[dataset_text_field])["input_ids"]}
+[default0]:[rank0]: KeyError: 'text'
+[default0]:[rank0]: """
+[default0]:
+[default0]:[rank0]: The above exception was the direct cause of the following exception:
+[default0]:
+[default0]:[rank0]: Traceback (most recent call last):
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/sft.py", line 182, in <module>
+[default0]:[rank0]:     main()
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/sft.py", line 151, in main
+[default0]:[rank0]:     trainer = SFTTrainer(
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/trl/trainer/sft_trainer.py", line 519, in __init__
+[default0]:[rank0]:     train_dataset = self._prepare_dataset(
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/trl/trainer/sft_trainer.py", line 800, in _prepare_dataset
+[default0]:[rank0]:     dataset = dataset.map(
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/datasets/arrow_dataset.py", line 560, in wrapper
+[default0]:[rank0]:     out: Union["Dataset", "DatasetDict"] = func(self, *args, **kwargs)
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/datasets/arrow_dataset.py", line 3147, in map
+[default0]:[rank0]:     for rank, done, content in iflatmap_unordered(
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/datasets/utils/py_utils.py", line 718, in iflatmap_unordered
+[default0]:[rank0]:     [async_result.get(timeout=0.05) for async_result in async_results]
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/datasets/utils/py_utils.py", line 718, in <listcomp>
+[default0]:[rank0]:     [async_result.get(timeout=0.05) for async_result in async_results]
+[default0]:[rank0]:   File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/multiprocess/pool.py", line 774, in get
+[default0]:[rank0]:     raise self._value
+[default0]:[rank0]: KeyError: 'text'
+[default0]:[rank0]:[W1002 23:11:46.880630944 ProcessGroupNCCL.cpp:1538] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+W1002 23:12:06.301000 168435 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 169652 closing signal SIGTERM
+W1002 23:12:06.302000 168435 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 169653 closing signal SIGTERM
+W1002 23:12:06.302000 168435 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 169654 closing signal SIGTERM
+E1002 23:12:07.280000 168435 site-packages/torch/distributed/elastic/multiprocessing/api.py:874] failed (exitcode: 1) local_rank: 0 (pid: 169651) of binary: /lus/eagle/projects/SR-APPFL/duo/env/sft/bin/python
+Traceback (most recent call last):
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1245, in <module>
+    main()
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1241, in main
+    launch_command(args)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1220, in launch_command
+    deepspeed_launcher(args)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/accelerate/commands/launch.py", line 906, in deepspeed_launcher
+    distrib_run.run(args)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 143, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 277, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/lus/eagle/projects/SR-APPFL/duo/LLM-trl/polaris/sft.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2025-10-02_23:12:06
+  host      : x3005c0s19b0n0.hsn.cm.polaris.alcf.anl.gov
+  rank      : 0 (local_rank: 0)
+  exitcode  : 1 (pid: 169651)
+  error_file: <N/A>
+  traceback : To enable traceback see: https://pytorch.org/docs/stable/elastic/errors.html
+============================================================
+[default0]:[ds] Using CXX=/usr/bin/g++-12
+[default2]:[ds] Using CXX=/usr/bin/g++-12
+[default1]:[ds] Using CXX=/usr/bin/g++-12
+[default3]:[ds] Using CXX=/usr/bin/g++-12
+[default0]:[2025-10-02 23:08:05,409] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default2]:[2025-10-02 23:08:05,410] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default1]:[2025-10-02 23:08:05,408] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default3]:[2025-10-02 23:08:05,409] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default0]:[2025-10-02 23:08:12,118] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default2]:[2025-10-02 23:08:12,120] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default1]:[2025-10-02 23:08:12,119] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default3]:[2025-10-02 23:08:12,119] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default0]:[2025-10-02 23:08:12,208] [INFO] [comm.py:821:init_distributed] cdb=None
+[default0]:[2025-10-02 23:08:12,208] [INFO] [comm.py:852:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[default2]:[2025-10-02 23:08:12,208] [INFO] [comm.py:821:init_distributed] cdb=None
+[default1]:[2025-10-02 23:08:12,207] [INFO] [comm.py:821:init_distributed] cdb=None
+[default3]:[2025-10-02 23:08:12,209] [INFO] [comm.py:821:init_distributed] cdb=None
+[default0]:[2025-10-02 23:08:15,011] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default2]:[2025-10-02 23:08:15,012] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default1]:[2025-10-02 23:08:15,011] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default3]:[2025-10-02 23:08:15,012] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default0]:[2025-10-02 23:08:23,324] [INFO] [partition_parameters.py:366:__exit__] finished initializing model - num_params = 291, num_elems = 8.03B
+x3005c0s19b0n0.hsn.cm.polaris.alcf.anl.gov: rank 0 exited with code 1
+W1002 23:12:08.631000 311940 site-packages/torch/distributed/elastic/agent/server/api.py:723] Received Signals.SIGTERM death signal, shutting down workers
+W1002 23:12:08.632000 311940 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 313162 closing signal SIGTERM
+W1002 23:12:08.632000 311940 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 313163 closing signal SIGTERM
+W1002 23:12:08.632000 311940 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 313164 closing signal SIGTERM
+W1002 23:12:08.632000 311940 site-packages/torch/distributed/elastic/multiprocessing/api.py:900] Sending process 313165 closing signal SIGTERM
+Traceback (most recent call last):
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/runpy.py", line 196, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/runpy.py", line 86, in _run_code
+    exec(code, run_globals)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1245, in <module>
+    main()
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1241, in main
+    launch_command(args)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/accelerate/commands/launch.py", line 1220, in launch_command
+    deepspeed_launcher(args)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/accelerate/commands/launch.py", line 906, in deepspeed_launcher
+    distrib_run.run(args)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/run.py", line 892, in run
+    elastic_launch(
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 143, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/launcher/api.py", line 268, in launch_agent
+    result = agent.run()
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/elastic/metrics/api.py", line 138, in wrapper
+    result = f(*args, **kwargs)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 715, in run
+    result = self._invoke_run(role)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/elastic/agent/server/api.py", line 879, in _invoke_run
+    time.sleep(monitor_interval)
+  File "/lus/eagle/projects/SR-APPFL/duo/env/sft/lib/python3.10/site-packages/torch/distributed/elastic/multiprocessing/api.py", line 84, in _terminate_process_handler
+    raise SignalException(f"Process {os.getpid()} got signal: {sigval}", sigval=sigval)
+torch.distributed.elastic.multiprocessing.api.SignalException: Process 311940 got signal: 15
+[default1]:[ds] Using CXX=/usr/bin/g++-12
+[default2]:[ds] Using CXX=/usr/bin/g++-12
+[default3]:[ds] Using CXX=/usr/bin/g++-12
+[default0]:[ds] Using CXX=/usr/bin/g++-12
+[default1]:[2025-10-02 23:08:05,407] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default2]:[2025-10-02 23:08:05,407] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default3]:[2025-10-02 23:08:05,406] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default0]:[2025-10-02 23:08:05,405] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default1]:[2025-10-02 23:08:12,035] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default2]:[2025-10-02 23:08:12,036] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default3]:[2025-10-02 23:08:12,036] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default0]:[2025-10-02 23:08:12,037] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default1]:[2025-10-02 23:08:12,123] [INFO] [comm.py:821:init_distributed] cdb=None
+[default2]:[2025-10-02 23:08:12,122] [INFO] [comm.py:821:init_distributed] cdb=None
+[default3]:[2025-10-02 23:08:12,123] [INFO] [comm.py:821:init_distributed] cdb=None
+[default0]:[2025-10-02 23:08:12,124] [INFO] [comm.py:821:init_distributed] cdb=None
+[default1]:[2025-10-02 23:08:15,012] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default2]:[2025-10-02 23:08:15,010] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default3]:[2025-10-02 23:08:15,011] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default0]:[2025-10-02 23:08:15,011] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8

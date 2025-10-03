@@ -6,7 +6,7 @@
 #PBS -l place=scatter
 #PBS -l walltime=01:00:00
 #PBS -l filesystems=home:eagle
-#PBS -N 1cds_ds_16
+#PBS -N 8cds_ds_8
 #PBS -j oe
 #PBS -V
 

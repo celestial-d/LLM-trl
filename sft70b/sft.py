@@ -108,9 +108,9 @@ def main():
         gradient_checkpointing_kwargs={"use_reentrant": False},
         max_length=512,
         packing=True,
-        per_device_train_batch_size=32,   #16 for 8B, 2 for 70B
-        gradient_accumulation_steps=8,    #16 for 8B, 8 for 70B
-        dataset_num_proc=32,          #64 for 8B, 32 for 70B
+        per_device_train_batch_size=16,   #16 for 8B, 2 for 70B
+        gradient_accumulation_steps=16,    #16 for 8B, 8 for 70B
+        dataset_num_proc=64,          #64 for 8B, 32 for 70B
         num_train_epochs=1,
     )
 
@@ -118,18 +118,17 @@ def main():
     # model_path = os.path.expanduser("../../models/Qwen3-8B")
     #model_path = os.path.join(os.environ["SCRATCH"], "Llama-3.1-70B")
     #model_path = "/lus/eagle/projects/SR-APPFL/duo/models/llama-3p3-70b-instruct"
-    #scratch = os.getenv("SCRATCH", "/lus/eagle/projects/SR-APPFL/duo")
-    #model_path = os.path.join(scratch, "models/llama3-8b-instruct")
-    #model_path = os.path.join(scratch, "llama-3p3-70b-instruct")
-    model_path = "/home/zhangduo4610/opt-125m"
+    scratch = os.getenv("SCRATCH", "/lus/eagle/projects/SR-APPFL/duo")
+    model_path = os.path.join(scratch, "models/llama3-8b-instruct")
+    #model_path = os.path.join(scratch, "models/llama-3p3-70b-instruct")
     # or the absolute path directly if that’s where it lives
 
-    model_path = "/lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct"
+    #model_path = "/lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct"
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
-        # attn_implementation="flash_attention_2",
+        attn_implementation="flash_attention_2",
     )
     model.config.use_cache = False
     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)

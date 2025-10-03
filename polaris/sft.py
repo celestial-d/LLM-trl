@@ -5,7 +5,7 @@ import torch
 import shutil
 import torch.distributed as dist
 #from datasets import load_dataset
-from dataset.py import load_data, get_tokenizer_and_data_collator_and_propt_formatting
+from dataset import load_data
 from transformers import AutoTokenizer, AutoModelForCausalLM, TrainerCallback
 from trl import SFTConfig, SFTTrainer
 from torch.profiler import profile, schedule, tensorboard_trace_handler, ProfilerActivity
@@ -93,6 +93,39 @@ class StepTraceHandler:
 
         self.emit_idx += 1
 
+
+def formatting_prompts_func(example):
+    header = (
+        "Below is an instruction that describes a task. "
+        "Write a response that appropriately completes the request."
+    )
+
+    # If TRL ever passes a batch (rare), handle it gracefully:
+    if isinstance(example.get("instruction"), list):
+        out = []
+        N = len(example["instruction"])
+        inputs = example.get("input", [None] * N)
+        for i in range(N):
+            instr = (example["instruction"][i] or "").strip()
+            resp  = (example["response"][i] or "").strip()
+            inp   = (inputs[i] or "").strip() if inputs is not None else ""
+            if inp:
+                s = f"{header}\n### Instruction:\n{instr}\n\n### Input:\n{inp}\n\n### Response: {resp}"
+            else:
+                s = f"{header}\n### Instruction:\n{instr}\n\n### Response: {resp}"
+            out.append(s)
+        return out  # OK only if TRL actually batched
+
+    # Normal path: single example -> return ONE string
+    instr = (example.get("instruction") or "").strip()
+    resp  = (example.get("response") or "").strip()
+    inp   = (example.get("input") or "").strip() if example.get("input") is not None else ""
+    if inp:
+        return f"{header}\n### Instruction:\n{instr}\n\n### Input:\n{inp}\n\n### Response: {resp}"
+    else:
+        return f"{header}\n### Instruction:\n{instr}\n\n### Response: {resp}"
+
+
 class ProfCallback(TrainerCallback):
     def __init__(self, prof):
         self.prof = prof
@@ -102,15 +135,15 @@ class ProfCallback(TrainerCallback):
 def main():
     # ---------- TRL / SFT config ----------
     training_args = SFTConfig(
-        output_dir="llama3-wikitext-SFT_2",
+        output_dir="/lus/eagle/projects/SR-APPFL/duo/tmp/llama3-wikitext-SFT_2",
         bf16=True,
         use_liger_kernel=False,
         gradient_checkpointing=True,
         gradient_checkpointing_kwargs={"use_reentrant": False},
         max_length=512,
         packing=True,
-        per_device_train_batch_size=32,   #16 for 8B, 2 for 70B
-        gradient_accumulation_steps=8,    #16 for 8B, 8 for 70B
+        per_device_train_batch_size=16,   #16 for 8B, 2 for 70B
+        gradient_accumulation_steps=16,    #16 for 8B, 8 for 70B
         dataset_num_proc=32,          #64 for 8B, 32 for 70B
         num_train_epochs=1,
     )
@@ -119,18 +152,16 @@ def main():
     # model_path = os.path.expanduser("../../models/Qwen3-8B")
     #model_path = os.path.join(os.environ["SCRATCH"], "Llama-3.1-70B")
     #model_path = "/lus/eagle/projects/SR-APPFL/duo/models/llama-3p3-70b-instruct"
-    #scratch = os.getenv("SCRATCH", "/lus/eagle/projects/SR-APPFL/duo")
-    #model_path = os.path.join(scratch, "models/llama3-8b-instruct")
+    scratch = os.getenv("SCRATCH", "/lus/eagle/projects/SR-APPFL/duo")
+    model_path = os.path.join(scratch, "models/llama3-8b-instruct")
     #model_path = os.path.join(scratch, "llama-3p3-70b-instruct")
-    model_path = "/home/zhangduo4610/opt-125m"
     # or the absolute path directly if that’s where it lives
 
-    model_path = "/lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct"
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
         torch_dtype=torch.bfloat16,
         low_cpu_mem_usage=True,
-        # attn_implementation="flash_attention_2",
+        attn_implementation="flash_attention_2",
     )
     model.config.use_cache = False
     tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
@@ -146,11 +177,7 @@ def main():
     #     },
     #     split="train",
     # )
-    tokenizer, data_collator, formatting_prompts_func = (
-        get_tokenizer_and_data_collator_and_propt_formatting(model_path)
-    )
     
-    tokenizer = AutoTokenizer.from_pretrained(model_path, use_fast=False)
     #trainset = load_data(partition_id, num_partitions, dataset_name)
     trainset = load_data(0, 2, "/home/zhangduo4610/CodeAlpaca-20k")
     # ---------- Trainer ----------
@@ -159,6 +186,7 @@ def main():
         processing_class=tokenizer,
         args=training_args,
         train_dataset=trainset,
+        formatting_func=formatting_prompts_func,
     )
 
     # # ---------- Profiler setup (CURRENT DIR) ----------

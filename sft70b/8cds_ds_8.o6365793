@@ -1,0 +1,958 @@
++ export 'CXXFLAGS= -fpermissive'
++ CXXFLAGS=' -fpermissive'
++ ENV_NAME_PATH=/lus/eagle/projects/SR-APPFL/duo/env/sft
++ APP_DIR=/lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b
++ SCRIPT_PATH=/lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b/sft.py
++ DS_CFG=/lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b/deepspeed_zero3.yaml
++ export TRITON_DISABLE_TMA=1
++ TRITON_DISABLE_TMA=1
++ export 'CXXFLAGS= -fpermissive -fpermissive'
++ CXXFLAGS=' -fpermissive -fpermissive'
++ export DS_BUILD_SPARSE_ATTN=0
++ DS_BUILD_SPARSE_ATTN=0
++ export DS_SKIP_CUDA_BUILD=1
++ DS_SKIP_CUDA_BUILD=1
++ export GPUS_PER_NODE=4
++ GPUS_PER_NODE=4
+++ wc -l
++ export NNODES=2
++ NNODES=2
++ export WORLD_SIZE=8
++ WORLD_SIZE=8
+++ head -n1 /var/spool/pbs/aux/6365793.polaris-pbs-01.hsn.cm.polaris.alcf.anl.gov
++ HEADNODE=x3006c0s19b0n0.hsn.cm.polaris.alcf.anl.gov
++ HEADIP=x3006c0s19b0n0.hsn.cm.polaris.alcf.anl.gov
++ export RDZV_PORT=12355
++ RDZV_PORT=12355
++ export OMP_NUM_THREADS=8
++ OMP_NUM_THREADS=8
++ export TMPDIR=/tmp/zhangduo4610_6365793
++ TMPDIR=/tmp/zhangduo4610_6365793
++ mkdir -p /tmp/zhangduo4610_6365793
++ export TRITON_CACHE_DIR_BASE=/tmp/zhangduo4610_6365793/triton
++ TRITON_CACHE_DIR_BASE=/tmp/zhangduo4610_6365793/triton
++ export TORCH_EXTENSIONS_DIR_BASE=/tmp/zhangduo4610_6365793/torch_ext
++ TORCH_EXTENSIONS_DIR_BASE=/tmp/zhangduo4610_6365793/torch_ext
++ mkdir -p /tmp/zhangduo4610_6365793/triton /tmp/zhangduo4610_6365793/torch_ext
++ PY=/lus/eagle/projects/SR-APPFL/duo/env/sft/bin/python
++ export PYTHONNOUSERSITE=1
++ PYTHONNOUSERSITE=1
++ LAUNCHER='
+  export RANK=${PMI_RANK:-0} ;
+  export LOCAL_RANK=${PMI_LOCAL_RANK:-$((RANK % 4))} ;
+  export TRITON_CACHE_DIR=/tmp/zhangduo4610_6365793/triton/$RANK ;
+  export TORCH_EXTENSIONS_DIR=/tmp/zhangduo4610_6365793/torch_ext/$RANK ;
+  mkdir -p "$TRITON_CACHE_DIR" "$TORCH_EXTENSIONS_DIR" ;
+
+# --- Polaris modules ---
+  module use /soft/modulefiles
+  module load gcc-native/12.3
+  module load conda/2024-04-29-aws-nccl
+  module load cudatoolkit-standalone/12.4.0
+  unset http_proxy https_proxy HTTP_PROXY
+  conda activate /lus/eagle/projects/SR-APPFL/duo/env/sft
+
+  HF_HUB_ENABLE_HF_TRANSFER=1 \
+  ACCELERATE_LOG_LEVEL=info \
+  TRANSFORMERS_VERBOSITY=info \
+  python -m accelerate.commands.launch \
+    --config_file /lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b/deepspeed_zero3.yaml \
+    --num_machines 2 \
+    --num_processes 8 \
+    --main_process_ip x3006c0s19b0n0.hsn.cm.polaris.alcf.anl.gov \
+    --main_process_port 12355 \
+    --machine_rank ${PMI_RANK:-0} \
+    --tee 3 \
+    /lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b/sft.py
+'
++ mpiexec -n 2 -ppn 1 bash -lc '
+  export RANK=${PMI_RANK:-0} ;
+  export LOCAL_RANK=${PMI_LOCAL_RANK:-$((RANK % 4))} ;
+  export TRITON_CACHE_DIR=/tmp/zhangduo4610_6365793/triton/$RANK ;
+  export TORCH_EXTENSIONS_DIR=/tmp/zhangduo4610_6365793/torch_ext/$RANK ;
+  mkdir -p "$TRITON_CACHE_DIR" "$TORCH_EXTENSIONS_DIR" ;
+
+# --- Polaris modules ---
+  module use /soft/modulefiles
+  module load gcc-native/12.3
+  module load conda/2024-04-29-aws-nccl
+  module load cudatoolkit-standalone/12.4.0
+  unset http_proxy https_proxy HTTP_PROXY
+  conda activate /lus/eagle/projects/SR-APPFL/duo/env/sft
+
+  HF_HUB_ENABLE_HF_TRANSFER=1 \
+  ACCELERATE_LOG_LEVEL=info \
+  TRANSFORMERS_VERBOSITY=info \
+  python -m accelerate.commands.launch \
+    --config_file /lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b/deepspeed_zero3.yaml \
+    --num_machines 2 \
+    --num_processes 8 \
+    --main_process_ip x3006c0s19b0n0.hsn.cm.polaris.alcf.anl.gov \
+    --main_process_port 12355 \
+    --machine_rank ${PMI_RANK:-0} \
+    --tee 3 \
+    /lus/eagle/projects/SR-APPFL/duo/LLM-trl/sft70b/sft.py
+'
+
+The following have been reloaded with a version change:
+  1) conda/2024-04-29 => conda/2024-04-29-aws-nccl
+
+
+The following have been reloaded with a version change:
+  1) conda/2024-04-29 => conda/2024-04-29-aws-nccl
+
+[2025-10-02 22:41:09,113] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-10-02 22:41:09,113] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[2025-10-02 22:42:21,879] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[2025-10-02 22:42:21,879] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default0]:PyTorch: setting up devices
+[default1]:PyTorch: setting up devices
+[default2]:PyTorch: setting up devices
+[default3]:PyTorch: setting up devices
+[default1]:PyTorch: setting up devices
+[default2]:PyTorch: setting up devices
+[default3]:PyTorch: setting up devices
+[default0]:PyTorch: setting up devices
+[default1]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default1]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default2]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default2]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default3]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default3]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default0]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default0]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default0]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default0]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default1]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default1]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default2]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default2]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default3]:The default value for the training argument `--report_to` will change in v5 (from all installed integrations to none). In v5, you will need to use `--report_to all` to get the same behavior as now. You should start updating your code and make this info disappear :-).
+[default3]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/config.json
+[default1]:Model config LlamaConfig {
+[default1]:  "architectures": [
+[default1]:    "LlamaForCausalLM"
+[default1]:  ],
+[default1]:  "attention_bias": false,
+[default1]:  "attention_dropout": 0.0,
+[default1]:  "bos_token_id": 128000,
+[default1]:  "eos_token_id": 128009,
+[default1]:  "head_dim": 128,
+[default1]:  "hidden_act": "silu",
+[default1]:  "hidden_size": 4096,
+[default1]:  "initializer_range": 0.02,
+[default1]:  "intermediate_size": 14336,
+[default1]:  "max_position_embeddings": 8192,
+[default1]:  "mlp_bias": false,
+[default1]:  "model_type": "llama",
+[default1]:  "num_attention_heads": 32,
+[default1]:  "num_hidden_layers": 32,
+[default1]:  "num_key_value_heads": 8,
+[default1]:  "pretraining_tp": 1,
+[default1]:  "rms_norm_eps": 1e-05,
+[default1]:  "rope_scaling": null,
+[default1]:  "rope_theta": 500000.0,
+[default1]:  "tie_word_embeddings": false,
+[default1]:  "torch_dtype": "bfloat16",
+[default1]:  "transformers_version": "4.55.0",
+[default1]:  "use_cache": true,
+[default1]:  "vocab_size": 128256
+[default1]:}
+[default1]:
+[default1]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default2]:Model config LlamaConfig {
+[default2]:  "architectures": [
+[default2]:    "LlamaForCausalLM"
+[default2]:  ],
+[default2]:  "attention_bias": false,
+[default2]:  "attention_dropout": 0.0,
+[default2]:  "bos_token_id": 128000,
+[default2]:  "eos_token_id": 128009,
+[default2]:  "head_dim": 128,
+[default2]:  "hidden_act": "silu",
+[default2]:  "hidden_size": 4096,
+[default2]:  "initializer_range": 0.02,
+[default2]:  "intermediate_size": 14336,
+[default2]:  "max_position_embeddings": 8192,
+[default2]:  "mlp_bias": false,
+[default2]:  "model_type": "llama",
+[default2]:  "num_attention_heads": 32,
+[default2]:  "num_hidden_layers": 32,
+[default2]:  "num_key_value_heads": 8,
+[default2]:  "pretraining_tp": 1,
+[default2]:  "rms_norm_eps": 1e-05,
+[default2]:  "rope_scaling": null,
+[default2]:  "rope_theta": 500000.0,
+[default2]:  "tie_word_embeddings": false,
+[default2]:  "torch_dtype": "bfloat16",
+[default2]:  "transformers_version": "4.55.0",
+[default2]:  "use_cache": true,
+[default2]:  "vocab_size": 128256
+[default2]:}
+[default2]:
+[default2]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default3]:Model config LlamaConfig {
+[default3]:  "architectures": [
+[default3]:    "LlamaForCausalLM"
+[default3]:  ],
+[default3]:  "attention_bias": false,
+[default3]:  "attention_dropout": 0.0,
+[default3]:  "bos_token_id": 128000,
+[default3]:  "eos_token_id": 128009,
+[default3]:  "head_dim": 128,
+[default3]:  "hidden_act": "silu",
+[default3]:  "hidden_size": 4096,
+[default3]:  "initializer_range": 0.02,
+[default3]:  "intermediate_size": 14336,
+[default3]:  "max_position_embeddings": 8192,
+[default3]:  "mlp_bias": false,
+[default3]:  "model_type": "llama",
+[default3]:  "num_attention_heads": 32,
+[default3]:  "num_hidden_layers": 32,
+[default3]:  "num_key_value_heads": 8,
+[default3]:  "pretraining_tp": 1,
+[default3]:  "rms_norm_eps": 1e-05,
+[default3]:  "rope_scaling": null,
+[default3]:  "rope_theta": 500000.0,
+[default3]:  "tie_word_embeddings": false,
+[default3]:  "torch_dtype": "bfloat16",
+[default3]:  "transformers_version": "4.55.0",
+[default3]:  "use_cache": true,
+[default3]:  "vocab_size": 128256
+[default3]:}
+[default3]:
+[default3]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default0]:Model config LlamaConfig {
+[default0]:  "architectures": [
+[default0]:    "LlamaForCausalLM"
+[default0]:  ],
+[default0]:  "attention_bias": false,
+[default0]:  "attention_dropout": 0.0,
+[default0]:  "bos_token_id": 128000,
+[default0]:  "eos_token_id": 128009,
+[default0]:  "head_dim": 128,
+[default0]:  "hidden_act": "silu",
+[default0]:  "hidden_size": 4096,
+[default0]:  "initializer_range": 0.02,
+[default0]:  "intermediate_size": 14336,
+[default0]:  "max_position_embeddings": 8192,
+[default0]:  "mlp_bias": false,
+[default0]:  "model_type": "llama",
+[default0]:  "num_attention_heads": 32,
+[default0]:  "num_hidden_layers": 32,
+[default0]:  "num_key_value_heads": 8,
+[default0]:  "pretraining_tp": 1,
+[default0]:  "rms_norm_eps": 1e-05,
+[default0]:  "rope_scaling": null,
+[default0]:  "rope_theta": 500000.0,
+[default0]:  "tie_word_embeddings": false,
+[default0]:  "torch_dtype": "bfloat16",
+[default0]:  "transformers_version": "4.55.0",
+[default0]:  "use_cache": true,
+[default0]:  "vocab_size": 128256
+[default0]:}
+[default0]:
+[default0]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default0]:Model config LlamaConfig {
+[default0]:  "architectures": [
+[default0]:    "LlamaForCausalLM"
+[default0]:  ],
+[default0]:  "attention_bias": false,
+[default0]:  "attention_dropout": 0.0,
+[default0]:  "bos_token_id": 128000,
+[default0]:  "eos_token_id": 128009,
+[default0]:  "head_dim": 128,
+[default0]:  "hidden_act": "silu",
+[default0]:  "hidden_size": 4096,
+[default0]:  "initializer_range": 0.02,
+[default0]:  "intermediate_size": 14336,
+[default0]:  "max_position_embeddings": 8192,
+[default0]:  "mlp_bias": false,
+[default0]:  "model_type": "llama",
+[default0]:  "num_attention_heads": 32,
+[default0]:  "num_hidden_layers": 32,
+[default0]:  "num_key_value_heads": 8,
+[default0]:  "pretraining_tp": 1,
+[default0]:  "rms_norm_eps": 1e-05,
+[default0]:  "rope_scaling": null,
+[default0]:  "rope_theta": 500000.0,
+[default0]:  "tie_word_embeddings": false,
+[default0]:  "torch_dtype": "bfloat16",
+[default0]:  "transformers_version": "4.55.0",
+[default0]:  "use_cache": true,
+[default0]:  "vocab_size": 128256
+[default0]:}
+[default0]:
+[default0]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default1]:Model config LlamaConfig {
+[default1]:  "architectures": [
+[default1]:    "LlamaForCausalLM"
+[default1]:  ],
+[default1]:  "attention_bias": false,
+[default1]:  "attention_dropout": 0.0,
+[default1]:  "bos_token_id": 128000,
+[default1]:  "eos_token_id": 128009,
+[default1]:  "head_dim": 128,
+[default1]:  "hidden_act": "silu",
+[default1]:  "hidden_size": 4096,
+[default1]:  "initializer_range": 0.02,
+[default1]:  "intermediate_size": 14336,
+[default1]:  "max_position_embeddings": 8192,
+[default1]:  "mlp_bias": false,
+[default1]:  "model_type": "llama",
+[default1]:  "num_attention_heads": 32,
+[default1]:  "num_hidden_layers": 32,
+[default1]:  "num_key_value_heads": 8,
+[default1]:  "pretraining_tp": 1,
+[default1]:  "rms_norm_eps": 1e-05,
+[default1]:  "rope_scaling": null,
+[default1]:  "rope_theta": 500000.0,
+[default1]:  "tie_word_embeddings": false,
+[default1]:  "torch_dtype": "bfloat16",
+[default1]:  "transformers_version": "4.55.0",
+[default1]:  "use_cache": true,
+[default1]:  "vocab_size": 128256
+[default1]:}
+[default1]:
+[default1]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default2]:Model config LlamaConfig {
+[default2]:  "architectures": [
+[default2]:    "LlamaForCausalLM"
+[default2]:  ],
+[default2]:  "attention_bias": false,
+[default2]:  "attention_dropout": 0.0,
+[default2]:  "bos_token_id": 128000,
+[default2]:  "eos_token_id": 128009,
+[default2]:  "head_dim": 128,
+[default2]:  "hidden_act": "silu",
+[default2]:  "hidden_size": 4096,
+[default2]:  "initializer_range": 0.02,
+[default2]:  "intermediate_size": 14336,
+[default2]:  "max_position_embeddings": 8192,
+[default2]:  "mlp_bias": false,
+[default2]:  "model_type": "llama",
+[default2]:  "num_attention_heads": 32,
+[default2]:  "num_hidden_layers": 32,
+[default2]:  "num_key_value_heads": 8,
+[default2]:  "pretraining_tp": 1,
+[default2]:  "rms_norm_eps": 1e-05,
+[default2]:  "rope_scaling": null,
+[default2]:  "rope_theta": 500000.0,
+[default2]:  "tie_word_embeddings": false,
+[default2]:  "torch_dtype": "bfloat16",
+[default2]:  "transformers_version": "4.55.0",
+[default2]:  "use_cache": true,
+[default2]:  "vocab_size": 128256
+[default2]:}
+[default2]:
+[default2]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default3]:Model config LlamaConfig {
+[default3]:  "architectures": [
+[default3]:    "LlamaForCausalLM"
+[default3]:  ],
+[default3]:  "attention_bias": false,
+[default3]:  "attention_dropout": 0.0,
+[default3]:  "bos_token_id": 128000,
+[default3]:  "eos_token_id": 128009,
+[default3]:  "head_dim": 128,
+[default3]:  "hidden_act": "silu",
+[default3]:  "hidden_size": 4096,
+[default3]:  "initializer_range": 0.02,
+[default3]:  "intermediate_size": 14336,
+[default3]:  "max_position_embeddings": 8192,
+[default3]:  "mlp_bias": false,
+[default3]:  "model_type": "llama",
+[default3]:  "num_attention_heads": 32,
+[default3]:  "num_hidden_layers": 32,
+[default3]:  "num_key_value_heads": 8,
+[default3]:  "pretraining_tp": 1,
+[default3]:  "rms_norm_eps": 1e-05,
+[default3]:  "rope_scaling": null,
+[default3]:  "rope_theta": 500000.0,
+[default3]:  "tie_word_embeddings": false,
+[default3]:  "torch_dtype": "bfloat16",
+[default3]:  "transformers_version": "4.55.0",
+[default3]:  "use_cache": true,
+[default3]:  "vocab_size": 128256
+[default3]:}
+[default3]:
+[default3]:loading weights file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/model.safetensors.index.json
+[default1]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default1]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default2]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default2]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default3]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default3]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default3]:Generate config GenerationConfig {
+[default3]:  "bos_token_id": 128000,
+[default3]:  "eos_token_id": 128009
+[default3]:}
+[default3]:
+[default0]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default0]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default0]:Generate config GenerationConfig {
+[default0]:  "bos_token_id": 128000,
+[default0]:  "eos_token_id": 128009
+[default0]:}
+[default0]:
+[default0]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default0]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default1]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default1]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default2]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default2]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default3]:Instantiating LlamaForCausalLM model under default dtype torch.bfloat16.
+[default3]:Detected DeepSpeed ZeRO-3: activating zero.init() for this model
+[default3]:Generate config GenerationConfig {
+[default3]:  "bos_token_id": 128000,
+[default3]:  "eos_token_id": 128009
+[default3]:}
+[default3]:
+[default1]:Generate config GenerationConfig {
+[default1]:  "bos_token_id": 128000,
+[default1]:  "eos_token_id": 128009
+[default1]:}
+[default1]:
+[default2]:Generate config GenerationConfig {
+[default2]:  "bos_token_id": 128000,
+[default2]:  "eos_token_id": 128009
+[default2]:}
+[default2]:
+[default0]:Generate config GenerationConfig {
+[default0]:  "bos_token_id": 128000,
+[default0]:  "eos_token_id": 128009
+[default0]:}
+[default0]:
+[default1]:Generate config GenerationConfig {
+[default1]:  "bos_token_id": 128000,
+[default1]:  "eos_token_id": 128009
+[default1]:}
+[default1]:
+[default2]:Generate config GenerationConfig {
+[default2]:  "bos_token_id": 128000,
+[default2]:  "eos_token_id": 128009
+[default2]:}
+[default2]:
+[default0]:
+[default0]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default1]:
+[default3]:
+[default3]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default2]:
+[default1]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default3]:
+[default3]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default2]:
+[default2]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default1]:
+[default1]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default0]:
+[default2]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default0]:
+[default0]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.58s/it][default2]:
+[default2]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.56s/it][default3]:
+[default3]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.58s/it][default1]:
+[default0]:Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s][default1]:
+[default1]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.62s/it][default2]:
+[default2]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.58s/it][default3]:
+[default3]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.55s/it][default0]:
+[default0]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:32<01:38, 32.90s/it][default1]:
+[default1]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.64s/it][default2]:
+[default1]:Loading checkpoint shards:  25%|██▌       | 1/4 [00:01<00:04,  1.62s/it][default0]:
+[default0]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.65s/it][default2]:
+[default2]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.65s/it][default3]:
+[default3]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.65s/it][default1]:
+[default2]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.62s/it][default3]:
+[default3]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.66s/it][default0]:
+[default0]:Loading checkpoint shards:  50%|█████     | 2/4 [01:09<01:09, 34.95s/it][default1]:
+[default1]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.86s/it][default2]:
+[default2]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.85s/it][default3]:
+[default1]:Loading checkpoint shards:  50%|█████     | 2/4 [00:37<00:43, 21.65s/it][default0]:
+[default0]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.87s/it][default2]:
+[default2]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.86s/it][default3]:
+[default3]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.86s/it][default1]:
+[default1]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.86s/it][default0]:
+[default0]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.63s/it]
+[default0]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.62s/it]
+[default0]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default0]:
+[default0]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default0]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default0]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default0]:Generate config GenerationConfig {
+[default0]:  "bos_token_id": 128000,
+[default0]:  "do_sample": true,
+[default0]:  "eos_token_id": [
+[default0]:    128001,
+[default0]:    128009
+[default0]:  ],
+[default0]:  "max_length": 4096,
+[default0]:  "temperature": 0.6,
+[default0]:  "top_p": 0.9
+[default0]:}
+[default0]:
+[default2]:
+[default2]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.63s/it]
+[default2]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.62s/it]
+[default2]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default2]:
+[default2]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default2]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default2]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default2]:Generate config GenerationConfig {
+[default2]:  "bos_token_id": 128000,
+[default2]:  "do_sample": true,
+[default2]:  "eos_token_id": [
+[default2]:    128001,
+[default2]:    128009
+[default2]:  ],
+[default2]:  "max_length": 4096,
+[default2]:  "temperature": 0.6,
+[default2]:  "top_p": 0.9
+[default2]:}
+[default2]:
+[default3]:
+[default3]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.63s/it]
+[default3]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.62s/it]
+[default3]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default3]:
+[default3]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default3]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default3]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default3]:Generate config GenerationConfig {
+[default3]:  "bos_token_id": 128000,
+[default3]:  "do_sample": true,
+[default3]:  "eos_token_id": [
+[default3]:    128001,
+[default3]:    128009
+[default3]:  ],
+[default3]:  "max_length": 4096,
+[default3]:  "temperature": 0.6,
+[default3]:  "top_p": 0.9
+[default3]:}
+[default3]:
+[default1]:
+[default1]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.63s/it]
+[default1]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.62s/it]
+[default1]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default1]:
+[default1]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default1]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default1]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default1]:Generate config GenerationConfig {
+[default1]:  "bos_token_id": 128000,
+[default1]:  "do_sample": true,
+[default1]:  "eos_token_id": [
+[default1]:    128001,
+[default1]:    128009
+[default1]:  ],
+[default1]:  "max_length": 4096,
+[default1]:  "temperature": 0.6,
+[default1]:  "top_p": 0.9
+[default1]:}
+[default1]:
+[default3]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:12<00:27, 27.86s/it][default1]:
+[default1]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.63s/it]
+[default1]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.62s/it]
+[default1]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default1]:
+[default1]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default1]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default1]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default1]:Generate config GenerationConfig {
+[default1]:  "bos_token_id": 128000,
+[default1]:  "do_sample": true,
+[default1]:  "eos_token_id": [
+[default1]:    128001,
+[default1]:    128009
+[default1]:  ],
+[default1]:  "max_length": 4096,
+[default1]:  "temperature": 0.6,
+[default1]:  "top_p": 0.9
+[default1]:}
+[default1]:
+[default1]:loading file tokenizer.json
+[default1]:loading file tokenizer.model
+[default1]:loading file added_tokens.json
+[default1]:loading file special_tokens_map.json
+[default1]:loading file tokenizer_config.json
+[default1]:loading file chat_template.jinja
+[default2]:
+[default2]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.62s/it]
+[default2]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.61s/it]
+[default2]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default2]:
+[default2]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default2]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default2]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default2]:Generate config GenerationConfig {
+[default2]:  "bos_token_id": 128000,
+[default2]:  "do_sample": true,
+[default2]:  "eos_token_id": [
+[default2]:    128001,
+[default2]:    128009
+[default2]:  ],
+[default2]:  "max_length": 4096,
+[default2]:  "temperature": 0.6,
+[default2]:  "top_p": 0.9
+[default2]:}
+[default2]:
+[default2]:loading file tokenizer.json
+[default2]:loading file tokenizer.model
+[default2]:loading file added_tokens.json
+[default2]:loading file special_tokens_map.json
+[default2]:loading file tokenizer_config.json
+[default2]:loading file chat_template.jinja
+[default3]:
+[default3]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 17.63s/it]
+[default3]:Loading checkpoint shards: 100%|██████████| 4/4 [01:14<00:00, 18.62s/it]
+[default3]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default3]:
+[default3]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default3]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default3]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default3]:Generate config GenerationConfig {
+[default3]:  "bos_token_id": 128000,
+[default3]:  "do_sample": true,
+[default3]:  "eos_token_id": [
+[default3]:    128001,
+[default3]:    128009
+[default3]:  ],
+[default3]:  "max_length": 4096,
+[default3]:  "temperature": 0.6,
+[default3]:  "top_p": 0.9
+[default3]:}
+[default3]:
+[default3]:loading file tokenizer.json
+[default3]:loading file tokenizer.model
+[default3]:loading file added_tokens.json
+[default3]:loading file special_tokens_map.json
+[default3]:loading file tokenizer_config.json
+[default3]:loading file chat_template.jinja
+[default0]:loading file tokenizer.json
+[default0]:loading file tokenizer.model
+[default0]:loading file added_tokens.json
+[default0]:loading file special_tokens_map.json
+[default0]:loading file tokenizer_config.json
+[default0]:loading file chat_template.jinja
+[default2]:loading file tokenizer.json
+[default2]:loading file tokenizer.model
+[default2]:loading file added_tokens.json
+[default2]:loading file special_tokens_map.json
+[default2]:loading file tokenizer_config.json
+[default2]:loading file chat_template.jinja
+[default3]:loading file tokenizer.json
+[default3]:loading file tokenizer.model
+[default3]:loading file added_tokens.json
+[default3]:loading file special_tokens_map.json
+[default3]:loading file tokenizer_config.json
+[default3]:loading file chat_template.jinja
+[default1]:loading file tokenizer.json
+[default1]:loading file tokenizer.model
+[default1]:loading file added_tokens.json
+[default1]:loading file special_tokens_map.json
+[default1]:loading file tokenizer_config.json
+[default1]:loading file chat_template.jinja
+[default2]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default0]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default3]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default1]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default1]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default2]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default3]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default0]:
+[default0]:Loading checkpoint shards:  75%|███████▌  | 3/4 [01:45<00:35, 35.51s/it][default0]:
+[default0]:Loading checkpoint shards: 100%|██████████| 4/4 [01:52<00:00, 24.18s/it]
+[default0]:Loading checkpoint shards: 100%|██████████| 4/4 [01:52<00:00, 28.07s/it]
+[default0]:All model checkpoint weights were used when initializing LlamaForCausalLM.
+[default0]:
+[default0]:All the weights of LlamaForCausalLM were initialized from the model checkpoint at /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct.
+[default0]:If your task is similar to the task the model of the checkpoint was trained on, you can already use LlamaForCausalLM for predictions without further training.
+[default0]:loading configuration file /lus/eagle/projects/SR-APPFL/duo/models/llama3-8b-instruct/generation_config.json
+[default0]:Generate config GenerationConfig {
+[default0]:  "bos_token_id": 128000,
+[default0]:  "do_sample": true,
+[default0]:  "eos_token_id": [
+[default0]:    128001,
+[default0]:    128009
+[default0]:  ],
+[default0]:  "max_length": 4096,
+[default0]:  "temperature": 0.6,
+[default0]:  "top_p": 0.9
+[default0]:}
+[default0]:
+[default0]:loading file tokenizer.json
+[default0]:loading file tokenizer.model
+[default0]:loading file added_tokens.json
+[default0]:loading file special_tokens_map.json
+[default0]:loading file tokenizer_config.json
+[default0]:loading file chat_template.jinja
+[default0]:Special tokens have been added in the vocabulary, make sure the associated word embeddings are fine-tuned or trained.
+[default0]:Using auto half precision backend
+[default0]:Using auto half precision backend
+[default0]:Gradient accumulation steps mismatch: GradientAccumulationPlugin has 1, DeepSpeed config has 16. Using DeepSpeed's value.
+[default0]:***** Running training *****
+[default0]:  Num examples = 121,169
+[default0]:  Num Epochs = 1
+[default0]:  Instantaneous batch size per device = 16
+[default0]:  Total train batch size (w. parallel, distributed & accumulation) = 2,048
+[default0]:  Gradient Accumulation steps = 16
+[default0]:  Total optimization steps = 60
+[default0]:  Number of trainable parameters = 8,030,261,248
+[default0]:***** Running training *****
+[default0]:  Num examples = 121,169
+[default0]:  Num Epochs = 1
+[default0]:  Instantaneous batch size per device = 16
+[default0]:  Total train batch size (w. parallel, distributed & accumulation) = 2,048
+[default0]:  Gradient Accumulation steps = 16
+[default0]:  Total optimization steps = 60
+[default0]:  Number of trainable parameters = 8,030,261,248
+[default0]:
+[default0]:[ds] Using CXX=/usr/bin/g++-12
+[default1]:[ds] Using CXX=/usr/bin/g++-12
+[default2]:[ds] Using CXX=/usr/bin/g++-12
+[default3]:[ds] Using CXX=/usr/bin/g++-12
+[default0]:[2025-10-02 22:42:58,555] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default1]:[2025-10-02 22:42:58,557] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default2]:[2025-10-02 22:42:58,557] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default3]:[2025-10-02 22:42:58,556] [INFO] [real_accelerator.py:254:get_accelerator] Setting ds_accelerator to cuda (auto detect)
+[default0]:[2025-10-02 22:43:05,393] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default1]:[2025-10-02 22:43:05,394] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default2]:[2025-10-02 22:43:05,393] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default3]:[2025-10-02 22:43:05,392] [INFO] [logging.py:107:log_dist] [Rank -1] [TorchCheckpointEngine] Initialized with serialization = False
+[default0]:[2025-10-02 22:43:05,481] [INFO] [comm.py:821:init_distributed] cdb=None
+[default0]:[2025-10-02 22:43:05,481] [INFO] [comm.py:852:init_distributed] Initializing TorchBackend in DeepSpeed with backend nccl
+[default1]:[2025-10-02 22:43:05,480] [INFO] [comm.py:821:init_distributed] cdb=None
+[default2]:[2025-10-02 22:43:05,481] [INFO] [comm.py:821:init_distributed] cdb=None
+[default3]:[2025-10-02 22:43:05,482] [INFO] [comm.py:821:init_distributed] cdb=None
+[default0]:[2025-10-02 22:43:08,331] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default1]:[2025-10-02 22:43:08,332] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default2]:[2025-10-02 22:43:08,330] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default3]:[2025-10-02 22:43:08,331] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default0]:[2025-10-02 22:43:14,336] [INFO] [partition_parameters.py:366:__exit__] finished initializing model - num_params = 291, num_elems = 8.03B
+[default0]:[2025-10-02 22:45:17,214] [INFO] [logging.py:107:log_dist] [Rank 0] DeepSpeed info: version=0.17.4, git-hash=unknown, git-branch=unknown
+[default0]:[2025-10-02 22:45:17,214] [INFO] [config.py:684:__init__] Config mesh_device None world_size = 8
+[default0]:[2025-10-02 22:45:18,010] [INFO] [engine.py:1339:_configure_distributed_model] ********** distributed groups summary **********
+[default0]:	 self.dp_world_size=8
+[default0]:	 self.mp_world_size=1
+[default0]:	 self.seq_dp_world_size=8
+[default0]:	 self.sequence_parallel_size=1
+[default0]:***********************************************
+[default0]:[2025-10-02 22:45:18,011] [INFO] [logging.py:107:log_dist] [Rank 0] DeepSpeed Flops Profiler Enabled: False
+[default0]:[2025-10-02 22:45:18,012] [INFO] [logging.py:107:log_dist] [Rank 0] Using client Optimizer as basic optimizer
+[default0]:[2025-10-02 22:45:18,012] [INFO] [logging.py:107:log_dist] [Rank 0] Removing param_group that has no 'params' in the basic Optimizer
+[default0]:[2025-10-02 22:45:18,020] [INFO] [logging.py:107:log_dist] [Rank 0] DeepSpeed Basic Optimizer = AdamW
+[default0]:[2025-10-02 22:45:18,021] [INFO] [utils.py:59:is_zero_supported_optimizer] Checking ZeRO support for optimizer=AdamW type=<class 'torch.optim.adamw.AdamW'>
+[default0]:[2025-10-02 22:45:18,021] [INFO] [logging.py:107:log_dist] [Rank 0] Creating fp16 ZeRO stage 3 optimizer, MiCS is enabled False, Hierarchical params gather False
+[default0]:[2025-10-02 22:45:18,021] [INFO] [logging.py:107:log_dist] [Rank 0] Creating torch.bfloat16 ZeRO stage 3 optimizer
+[default0]:[2025-10-02 22:45:18,706] [INFO] [utils.py:781:see_memory_usage] Stage 3 initialize beginning
+[default0]:[2025-10-02 22:45:18,706] [INFO] [utils.py:782:see_memory_usage] MA 1.87 GB         Max_MA 3.83 GB         CA 1.88 GB         Max_CA 4 GB 
+[default0]:[2025-10-02 22:45:18,707] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:18,733] [INFO] [stage3.py:186:__init__] Reduce bucket size 500000000
+[default0]:[2025-10-02 22:45:18,733] [INFO] [stage3.py:187:__init__] Prefetch bucket size 50000000
+[default0]:[2025-10-02 22:45:19,376] [INFO] [utils.py:781:see_memory_usage] DeepSpeedZeRoOffload initialize [begin]
+[default0]:[2025-10-02 22:45:19,377] [INFO] [utils.py:782:see_memory_usage] MA 1.87 GB         Max_MA 1.87 GB         CA 1.88 GB         Max_CA 2 GB 
+[default0]:[2025-10-02 22:45:19,377] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.81 GB, percent = 4.5%
+[default0]:Parameter Offload - Persistent parameters statistics: param_count = 65, numel = 266240
+[default0]:[2025-10-02 22:45:20,255] [INFO] [utils.py:781:see_memory_usage] DeepSpeedZeRoOffload initialize [end]
+[default0]:[2025-10-02 22:45:20,256] [INFO] [utils.py:782:see_memory_usage] MA 1.87 GB         Max_MA 1.87 GB         CA 1.88 GB         Max_CA 2 GB 
+[default0]:[2025-10-02 22:45:20,281] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:20,950] [INFO] [utils.py:781:see_memory_usage] Before creating fp16 partitions
+[default0]:[2025-10-02 22:45:20,968] [INFO] [utils.py:782:see_memory_usage] MA 1.87 GB         Max_MA 1.87 GB         CA 1.88 GB         Max_CA 2 GB 
+[default0]:[2025-10-02 22:45:20,968] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:24,066] [INFO] [utils.py:781:see_memory_usage] After creating fp16 partitions: 2
+[default0]:[2025-10-02 22:45:24,066] [INFO] [utils.py:782:see_memory_usage] MA 1.87 GB         Max_MA 1.87 GB         CA 1.87 GB         Max_CA 2 GB 
+[default0]:[2025-10-02 22:45:24,067] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:24,781] [INFO] [utils.py:781:see_memory_usage] Before creating fp32 partitions
+[default0]:[2025-10-02 22:45:24,781] [INFO] [utils.py:782:see_memory_usage] MA 1.87 GB         Max_MA 1.87 GB         CA 1.87 GB         Max_CA 2 GB 
+[default0]:[2025-10-02 22:45:24,781] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:25,482] [INFO] [utils.py:781:see_memory_usage] After creating fp32 partitions
+[default0]:[2025-10-02 22:45:25,483] [INFO] [utils.py:782:see_memory_usage] MA 5.61 GB         Max_MA 7.48 GB         CA 7.48 GB         Max_CA 7 GB 
+[default0]:[2025-10-02 22:45:25,483] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:26,151] [INFO] [utils.py:781:see_memory_usage] Before initializing optimizer states
+[default0]:[2025-10-02 22:45:26,152] [INFO] [utils.py:782:see_memory_usage] MA 5.61 GB         Max_MA 5.61 GB         CA 7.48 GB         Max_CA 7 GB 
+[default0]:[2025-10-02 22:45:26,183] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:26,858] [INFO] [utils.py:781:see_memory_usage] After initializing optimizer states
+[default0]:[2025-10-02 22:45:26,859] [INFO] [utils.py:782:see_memory_usage] MA 5.61 GB         Max_MA 9.35 GB         CA 11.22 GB         Max_CA 11 GB 
+[default0]:[2025-10-02 22:45:26,859] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:26,859] [INFO] [stage3.py:554:_setup_for_real_optimizer] optimizer state initialized
+[default0]:[2025-10-02 22:45:28,516] [INFO] [utils.py:781:see_memory_usage] After initializing ZeRO optimizer
+[default0]:[2025-10-02 22:45:28,516] [INFO] [utils.py:782:see_memory_usage] MA 8.41 GB         Max_MA 10.37 GB         CA 12.2 GB         Max_CA 12 GB 
+[default0]:[2025-10-02 22:45:28,516] [INFO] [utils.py:789:see_memory_usage] CPU Virtual Memory:  used = 22.82 GB, percent = 4.5%
+[default0]:[2025-10-02 22:45:28,517] [INFO] [logging.py:107:log_dist] [Rank 0] DeepSpeed Final Optimizer = DeepSpeedZeroOptimizer_Stage3
+[default0]:[2025-10-02 22:45:28,517] [INFO] [logging.py:107:log_dist] [Rank 0] DeepSpeed using configured LR scheduler = None
+[default0]:[2025-10-02 22:45:28,517] [INFO] [logging.py:107:log_dist] [Rank 0] DeepSpeed LR Scheduler = None
+[default0]:[2025-10-02 22:45:28,517] [INFO] [logging.py:107:log_dist] [Rank 0] step=0, skipped=0, lr=[2e-05, 2e-05], mom=[(0.9, 0.999), (0.9, 0.999)]
+[default0]:[2025-10-02 22:45:28,517] [INFO] [logging.py:107:log_dist] [Rank 0] [TorchCheckpointEngine] Initialized with serialization = True
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:954:print] DeepSpeedEngine configuration:
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   activation_checkpointing_config  {
+[default0]:    "partition_activations": false, 
+[default0]:    "contiguous_memory_optimization": false, 
+[default0]:    "cpu_checkpointing": false, 
+[default0]:    "number_checkpoints": null, 
+[default0]:    "synchronize_checkpoint_boundary": false, 
+[default0]:    "profile": false
+[default0]:}
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   aio_config ................... {'block_size': 1048576, 'queue_depth': 8, 'intra_op_parallelism': 1, 'single_submit': False, 'overlap_events': True, 'use_gds': False}
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   amp_enabled .................. False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   amp_params ................... False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   autotuning_config ............ {
+[default0]:    "enabled": false, 
+[default0]:    "start_step": null, 
+[default0]:    "end_step": null, 
+[default0]:    "metric_path": null, 
+[default0]:    "arg_mappings": null, 
+[default0]:    "metric": "throughput", 
+[default0]:    "model_info": null, 
+[default0]:    "results_dir": "autotuning_results", 
+[default0]:    "exps_dir": "autotuning_exps", 
+[default0]:    "overwrite": true, 
+[default0]:    "fast": true, 
+[default0]:    "start_profile_step": 3, 
+[default0]:    "end_profile_step": 5, 
+[default0]:    "tuner_type": "gridsearch", 
+[default0]:    "tuner_early_stopping": 5, 
+[default0]:    "tuner_num_trials": 50, 
+[default0]:    "model_info_path": null, 
+[default0]:    "mp_size": 1, 
+[default0]:    "max_train_batch_size": null, 
+[default0]:    "min_train_batch_size": 1, 
+[default0]:    "max_train_micro_batch_size_per_gpu": 1.024000e+03, 
+[default0]:    "min_train_micro_batch_size_per_gpu": 1, 
+[default0]:    "num_tuning_micro_batch_sizes": 3
+[default0]:}
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   bfloat16_config .............. enabled=True immediate_grad_update=False check_grad_overflow=False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   checkpoint_config ............ {'tag_validation': 'WARN', 'checkpoint_serialization': True, 'writer': None}
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   checkpoint_parallel_write_pipeline  False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   checkpoint_tag_validation_enabled  True
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   checkpoint_tag_validation_fail  False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   comms_config ................. <deepspeed.comm.config.DeepSpeedCommsConfig object at 0x149415f438e0>
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   communication_data_type ...... None
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   compile_config ............... deepcompile=False free_activation=False offload_activation=False offload_opt_states=False double_buffer=True symmetric_memory=False debug_log=False offload_parameters=False sync_before_reduce=False sync_after_reduce=False sync_before_allgather=False sync_after_allgather=False keep_int_input_tensors=True keep_all_input_tensors=False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   compression_config ........... {'weight_quantization': {'shared_parameters': {'enabled': False, 'quantizer_kernel': False, 'schedule_offset': 0, 'quantize_groups': 1, 'quantize_verbose': False, 'quantization_type': 'symmetric', 'quantize_weight_in_forward': False, 'rounding': 'nearest', 'fp16_mixed_quantize': False, 'quantize_change_ratio': 0.001}, 'different_groups': {}}, 'activation_quantization': {'shared_parameters': {'enabled': False, 'quantization_type': 'symmetric', 'range_calibration': 'dynamic', 'schedule_offset': 1000}, 'different_groups': {}}, 'sparse_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'row_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'head_pruning': {'shared_parameters': {'enabled': False, 'method': 'topk', 'schedule_offset': 1000}, 'different_groups': {}}, 'channel_pruning': {'shared_parameters': {'enabled': False, 'method': 'l1', 'schedule_offset': 1000}, 'different_groups': {}}, 'layer_reduction': {'enabled': False}}
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   curriculum_enabled_legacy .... False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   curriculum_params_legacy ..... False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   data_efficiency_config ....... {'enabled': False, 'seed': 1234, 'data_sampling': {'enabled': False, 'num_epochs': 1000, 'num_workers': 0, 'pin_memory': False, 'curriculum_learning': {'enabled': False}, 'dynamic_batching': {'enabled': False, 'lr_scaling_method': 'linear', 'min_batch_size': 1, 'max_batch_size': None, 'sequence_picking_order': 'dataloader', 'verbose': False}}, 'data_routing': {'enabled': False, 'random_ltd': {'enabled': False, 'layer_token_lr_schedule': {'enabled': False}}}}
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   data_efficiency_enabled ...... False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   dataloader_drop_last ......... False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   disable_allgather ............ False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   dump_state ................... False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   eigenvalue_enabled ........... False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   eigenvalue_gas_boundary_resolution  1
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   eigenvalue_layer_name ........ bert.encoder.layer
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   eigenvalue_layer_num ......... 0
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   eigenvalue_max_iter .......... 100
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   eigenvalue_stability ......... 1e-06
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   eigenvalue_tol ............... 0.01
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   eigenvalue_verbose ........... False
+[default0]:[2025-10-02 22:45:28,518] [INFO] [config.py:958:print]   elasticity_enabled ........... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   float16_config ............... enabled=False auto_cast=False loss_scale=0.0 initial_scale_power=16 loss_scale_window=1000 hysteresis=2 consecutive_hysteresis=False min_loss_scale=1 fp16_master_weights_and_grads=False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   flops_profiler_config ........ {
+[default0]:    "enabled": false, 
+[default0]:    "recompute_fwd_factor": 0.0, 
+[default0]:    "profile_step": 1, 
+[default0]:    "module_depth": -1, 
+[default0]:    "top_modules": 1, 
+[default0]:    "detailed": true, 
+[default0]:    "output_file": null
+[default0]:}
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   global_rank .................. 0
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   grad_accum_dtype ............. None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   gradient_accumulation_steps .. 16
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   gradient_clipping ............ 1.0
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   gradient_predivide_factor .... 1.0
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   graph_harvesting ............. False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   hybrid_engine ................ enabled=False max_out_tokens=512 inference_tp_size=1 release_inference_cache=False pin_parameters=True tp_gather_partition_size=8
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   load_universal_checkpoint .... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   memory_breakdown ............. False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   mics_hierarchial_params_gather  False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   mics_shard_size .............. -1
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   monitor_config ............... tensorboard=TensorBoardConfig(enabled=False, output_path='', job_name='DeepSpeedJobName') comet=CometConfig(enabled=False, samples_log_interval=100, project=None, workspace=None, api_key=None, experiment_name=None, experiment_key=None, online=None, mode=None) wandb=WandbConfig(enabled=False, group=None, team=None, project='deepspeed') csv_monitor=CSVConfig(enabled=False, output_path='', job_name='DeepSpeedJobName')
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   nebula_config ................ {
+[default0]:    "enabled": false, 
+[default0]:    "persistent_storage_path": null, 
+[default0]:    "persistent_time_interval": 100, 
+[default0]:    "num_of_version_in_retention": 2, 
+[default0]:    "enable_nebula_load": true, 
+[default0]:    "load_path": null
+[defa[default0]:  0%|          | 0/60 [00:00<?, ?it/s][default0]:
+ult0]:}
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   optimizer_legacy_fusion ...... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   optimizer_name ............... None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   optimizer_params ............. None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   pipeline ..................... {'stages': 'auto', 'partition': 'best', 'seed_layers': False, 'activation_checkpoint_interval': 0, 'pipe_partitioned': True, 'grad_partitioned': True}
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   pld_enabled .................. False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   pld_params ................... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   prescale_gradients ........... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   scheduler_name ............... None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   scheduler_params ............. None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   seq_parallel_communication_data_type  torch.float32
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   sparse_attention ............. None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   sparse_gradients_enabled ..... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   steps_per_print .............. inf
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   tensor_parallel_config ....... dtype=torch.float16 autotp_size=0 tp_overlap_comm=False tensor_parallel=TPConfig(tp_size=1, tp_grain_size=1, mpu=None, tp_group=None) injection_policy_tuple=None keep_module_on_host=False replace_with_kernel_inject=False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   timers_config ................ enabled=True synchronized=True
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   torch_autocast_dtype ......... None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   torch_autocast_enabled ....... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   torch_autocast_lower_precision_safe_modules  None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   train_batch_size ............. 2048
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   train_micro_batch_size_per_gpu  16
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   use_data_before_expert_parallel_  False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   use_node_local_storage ....... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   wall_clock_breakdown ......... False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   weight_quantization_config ... None
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   world_size ................... 8
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   zero_allow_untested_optimizer  True
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   zero_config .................. stage=3 contiguous_gradients=True reduce_scatter=True reduce_bucket_size=500000000 use_multi_rank_bucket_allreduce=True allgather_partitions=True allgather_bucket_size=500000000 overlap_comm=True load_from_fp32_weights=True elastic_checkpoint=False offload_param=DeepSpeedZeroOffloadParamConfig(device='none', nvme_path=None, buffer_count=5, buffer_size=100000000, max_in_cpu=1000000000, pin_memory=False) offload_optimizer=DeepSpeedZeroOffloadOptimizerConfig(device='none', nvme_path=None, buffer_count=4, pin_memory=False, pipeline_read=False, pipeline_write=False, fast_init=False, ratio=1.0) sub_group_size=1000000000 cpu_offload_param=None cpu_offload_use_pin_memory=None cpu_offload=None prefetch_bucket_size=50000000 param_persistence_threshold=100000 model_persistence_threshold=9223372036854775807 max_live_parameters=1000000000 max_reuse_distance=1000000000 gather_16bit_weights_on_model_save=True module_granularity_threshold=0 use_all_reduce_for_fetch_params=False stage3_gather_fp16_weights_on_model_save=False ignore_unused_parameters=True legacy_stage1=False round_robin_gradients=False zero_hpz_partition_size=1 zero_quantized_weights=False zero_quantized_nontrainable_weights=False zero_quantized_gradients=False zeropp_loco_param=None mics_shard_size=-1 mics_hierarchical_params_gather=False memory_efficient_linear=True pipeline_loading_checkpoint=False override_module_apply=True log_trace_cache_warnings=False
+[default0]:[2025-10-02 22:45:28,519] [INFO] [config.py:958:print]   zero_enabled ................. True
+[default0]:[2025-10-02 22:45:28,520] [INFO] [config.py:958:print]   zero_force_ds_cpu_optimizer .. True
+[default0]:[2025-10-02 22:45:28,520] [INFO] [config.py:958:print]   zero_optimization_stage ...... 3
+[default0]:[2025-10-02 22:45:28,520] [INFO] [config.py:944:print_user_config]   json = {
+[default0]:    "train_batch_size": 2.048000e+03, 
+[default0]:    "train_micro_batch_size_per_gpu": 16, 
+[default0]:    "gradient_accumulation_steps": 16, 
+[default0]:    "zero_optimization": {
+[default0]:        "stage": 3, 
+[default0]:        "offload_optimizer": {
+[default0]:            "device": "none", 
+[default0]:            "nvme_path": null
+[default0]:        }, 
+[default0]:        "offload_param": {
+[default0]:            "device": "none", 
+[default0]:            "nvme_path": null
+[default0]:        }, 
+[default0]:        "stage3_gather_16bit_weights_on_model_save": true
+[default0]:    }, 
+[default0]:    "gradient_clipping": 1.0, 
+[default0]:    "steps_per_print": inf, 
+[default0]:    "bf16": {
+[default0]:        "enabled": true
+[default0]:    }, 
+[default0]:    "fp16": {
+[default0]:        "enabled": false
+[default0]:    }, 
+[default0]:    "zero_allow_untested_optimizer": true
+[default0]:}
+[default0]:  2%|▏         | 1/60 [02:43<2:40:25, 163.14s/it][default0]:
+[default0]:  3%|▎         | 2/60 [04:55<2:20:04, 144.90s/it][default0]:
+[default0]:  5%|▌         | 3/60 [07:06<2:11:36, 138.54s/it][default0]:
+[default0]:  7%|▋         | 4/60 [09:17<2:06:47, 135.84s/it][default0]:
+[default0]:  8%|▊         | 5/60 [11:29<2:03:08, 134.34s/it][default0]:
+[default0]: 10%|█         | 6/60 [13:40<1:59:54, 133.24s/it][default0]:
+[default0]: 12%|█▏        | 7/60 [15:51<1:57:04, 132.54s/it][default0]:
+[default0]: 13%|█▎        | 8/60 [18:03<1:54:36, 132.25s/it][default0]:
+[default0]: 15%|█▌        | 9/60 [20:14<1:52:09, 131.95s/it][default0]:
+[default0]: 17%|█▋        | 10/60 [22:26<1:49:49, 131.79s/it][default0]:
+[default0]:                                                  
+[default0]:
+[default0]: 17%|█▋        | 10/60 [22:26<1:49:49, 131.79s/it][default0]:
+[default0]: 18%|█▊        | 11/60 [24:38<1:47:47, 132.00s/it][default0]:
+[default0]: 20%|██        | 12/60 [26:49<1:45:17, 131.61s/it][default0]:
+[default0]: 22%|██▏       | 13/60 [29:01<1:43:18, 131.88s/it][default0]:
+[default0]: 23%|██▎       | 14/60 [31:14<1:41:18, 132.14s/it][default0]:
+[default0]: 25%|██▌       | 15/60 [33:26<1:39:05, 132.11s/it][default0]:
+[default0]: 27%|██▋       | 16/60 [35:37<1:36:38, 131.80s/it][default0]:
+[default0]: 28%|██▊       | 17/60 [37:48<1:34:17, 131.58s/it][default0]:
+[default0]: 30%|███       | 18/60 [40:00<1:32:07, 131.60s/it][default0]:
+[default0]: 32%|███▏      | 19/60 [42:10<1:29:37, 131.17s/it][default0]:
+[default0]: 33%|███▎      | 20/60 [44:21<1:27:28, 131.21s/it][default0]:
+[default0]:                                                  
+[default0]:
+[default0]: 33%|███▎      | 20/60 [44:21<1:27:28, 131.21s/it][default0]:
+[default0]: 35%|███▌      | 21/60 [46:34<1:25:28, 131.49s/it][default0]:
+[default0]: 37%|███▋      | 22/60 [48:44<1:23:06, 131.22s/it][default0]:
+[default0]: 38%|███▊      | 23/60 [50:55<1:20:52, 131.15s/it][default0]:
+=>> PBS: job killed: walltime 3625 exceeded limit 3600
